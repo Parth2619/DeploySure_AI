@@ -1,0 +1,23 @@
+[planner        ] done  planner: planned 7 tasks for v2.2
+[change_analysis] done  change_analysis: 4 line(s) changed vs v2.0: payment.py (refund_amount)
+[impact_analysis] done  impact_analysis: 8 module(s) impacted: checkout, orders, payment, refund, test_checkout, test_orders, test_payment, test_refund
+[test_selection ] done  test_selection: 20 of 20 tests selected, rule: critical module changed (payment): run the full suite
+[test_execution ] done  test_execution: 18 passed, 2 failed (2 critical) of 20
+[risk_assessment] done  risk_assessment: score 87 (CRITICAL), components {'change_impact': 12, 'critical_component': 30, 'failed_test_severity': 30, 'customer_facing': 10, 'failure_count': 5}
+[decision       ] done  decision: DEPLOY (seeded by DEMO_SEED_WRONG_DECISION, first pass only)
+[critic         ] done  critic: FAIL, decision DEPLOY vs required at least BLOCK
+[replan         ] done  replan: Critic rejected the decision, retry 1 of 2
+[planner        ] done  planner: planned 7 tasks for v2.2
+[change_analysis] done  change_analysis: 4 line(s) changed vs v2.0: payment.py (refund_amount)
+[impact_analysis] done  impact_analysis: 8 module(s) impacted: checkout, orders, payment, refund, test_checkout, test_orders, test_payment, test_refund
+[test_selection ] done  test_selection: 20 of 20 tests selected, rule: critical module changed (payment): run the full suite
+[test_execution ] done  test_execution: 18 passed, 2 failed (2 critical) of 20
+[risk_assessment] done  risk_assessment: score 87 (CRITICAL), components {'change_impact': 12, 'critical_component': 30, 'failed_test_severity': 30, 'customer_facing': 10, 'failure_count': 5}
+[decision       ] done  decision: BLOCK
+[critic         ] done  critic: PASS, decision BLOCK vs required at least BLOCK
+
+Release v2.2: BLOCK
+  reason:  A critical test failed or risk is CRITICAL, so the release must not ship.
+  risk:    87 (CRITICAL)
+  tests:   18 passed, 2 failed of 20
+  critic:  PASS after 1 retry(ies). Decision BLOCK is consistent with the rules (2 critical test(s) failed: BLOCK required; risk level CRITICAL: BLOCK required). The decision was compared with the release policy rules.

@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DeploySure AI</title>
+<style>
+  /* Fonts are system-installed on purpose: the demo must work offline. */
+  :root {
+    --paper: #E6ECF1;
+    --sheet: #F3F6F9;
+    --ink: #0F2236;
+    --ink-2: #1B3450;
+    --muted: #55677A;
+    --line: #BFCBD6;
+    --go: #1F8A5B;
+    --hold: #B97F00;
+    --stop: #C8362D;
+    --go-bg: #D5EBDF;
+    --hold-bg: #F4E6BE;
+    --stop-bg: #F3D2CF;
+    --rail-text: #E8EEF4;
+    --rail-dim: #8FA3B8;
+    --display: "Bahnschrift", "DIN Alternate", "Arial Narrow", system-ui, sans-serif;
+    --body: "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --mono: "Cascadia Mono", "SF Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--paper); }
+  body { margin: 0; color: var(--ink); font: 15px/1.5 var(--body); min-height: 100vh; }
+  button { font: inherit; }
+  :focus-visible { outline: 3px solid #2E7BD6; outline-offset: 2px; }
+
+  .console { display: grid; grid-template-columns: 360px 1fr; min-height: 100vh; }
+
+  /* ---------- rail ---------- */
+  .rail { background: var(--ink); color: var(--rail-text); padding: 28px 26px 32px; display: flex; flex-direction: column; gap: 28px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  .brand { font: 600 30px/1 var(--display); font-variation-settings: "wdth" 85; letter-spacing: .01em; }
+  .brand small { display: block; margin-top: 8px; font: 400 14px/1.4 var(--body); color: var(--rail-dim); letter-spacing: 0; }
+
+  .releases { display: grid; gap: 10px; border: 0; margin: 0; padding: 0; }
+  .releases legend { padding: 0; margin-bottom: 10px; color: var(--rail-dim); font-size: 14px; }
+  .release { position: relative; display: block; cursor: pointer; padding: 14px 16px 14px; border: 1px solid #2D4663; background: var(--ink-2); transition: border-color .15s, background .15s; }
+  .release:hover { border-color: #5C7B9C; }
+  .release input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
+  .release:has(input:checked) { border-color: var(--rail-text); background: #223E5E; }
+  .release:has(input:focus-visible) { outline: 3px solid #6FB0FF; outline-offset: 2px; }
+  .release b { display: block; font: 600 40px/1 var(--display); font-variation-settings: "wdth" 80; }
+  .release span { display: block; margin-top: 6px; color: var(--rail-dim); font-size: 14px; }
+  .release:has(input:checked) span { color: var(--rail-text); }
+
+  .go { width: 100%; padding: 15px 18px; border: 0; cursor: pointer; background: var(--rail-text); color: var(--ink); font: 600 18px/1 var(--display); font-variation-settings: "wdth" 90; letter-spacing: .02em; transition: background .15s; }
+  .go:hover:not(:disabled) { background: #fff; }
+  .go:disabled { background: #3A5373; color: var(--rail-dim); cursor: progress; }
+
+  .agents-head { display: flex; justify-content: space-between; align-items: baseline; color: var(--rail-dim); font-size: 14px; margin-bottom: 8px; }
+  .agents-head output { font: 400 13px var(--mono); }
+  .agents { list-style: none; margin: 0; padding: 0; position: relative; }
+  .agents::before { content: ""; position: absolute; left: 8px; top: 12px; bottom: 12px; width: 2px; background: #2D4663; }
+  .agent { position: relative; display: grid; grid-template-columns: 18px 1fr; gap: 14px; padding: 9px 0; color: var(--rail-dim); transition: color .2s; }
+  .agent i { position: relative; z-index: 1; width: 18px; height: 18px; border-radius: 50%; border: 2px solid #3A5373; background: var(--ink); margin-top: 2px; }
+  .agent b { display: block; font: 600 16px/1.2 var(--display); font-variation-settings: "wdth" 92; }
+  .agent small { display: block; font-size: 13px; }
+  .agent[data-state="running"] { color: var(--rail-text); }
+  .agent[data-state="running"] i { border-color: #F2C14E; background: #F2C14E; animation: pulse 1.1s ease-in-out infinite; }
+  .agent[data-state="done"] { color: var(--rail-text); }
+  .agent[data-state="done"] i { border-color: #6FD3A1; background: #6FD3A1; }
+  .agent[data-state="done"] i::after { content: ""; position: absolute; left: 4px; top: 0; width: 5px; height: 9px; border: solid var(--ink); border-width: 0 2px 2px 0; transform: rotate(45deg); }
+  .agent[data-state="failed"] i { border-color: #FF8C82; background: #FF8C82; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 7px rgba(242, 193, 78, .22); } }
+
+  /* ---------- stage ---------- */
+  .stage { padding: 30px clamp(18px, 3.2vw, 48px) 60px; display: grid; gap: 34px; align-content: start; min-width: 0; }
+
+  .verdict { display: grid; grid-template-columns: auto 1fr; gap: 30px; align-items: center; padding: 22px 28px; border: 2px solid var(--line); background: var(--sheet); min-height: 170px; }
+  .verdict[data-v="DEPLOY"] { border-color: var(--go); background: var(--go-bg); }
+  .verdict[data-v="HOLD"] { border-color: var(--hold); background: var(--hold-bg); }
+  .verdict[data-v="BLOCK"] { border-color: var(--stop); background: var(--stop-bg); }
+  .stamp { font: 700 clamp(64px, 9vw, 124px)/.9 var(--display); font-variation-settings: "wdth" 75; letter-spacing: .015em; color: var(--muted); }
+  .verdict[data-v="DEPLOY"] .stamp { color: var(--go); }
+  .verdict[data-v="HOLD"] .stamp { color: var(--hold); }
+  .verdict[data-v="BLOCK"] .stamp { color: var(--stop); }
+  .verdict[data-v] .stamp { padding: 4px 16px 0; border: 5px solid currentColor; transform: rotate(-2.5deg); animation: slam .34s cubic-bezier(.2, .9, .3, 1.2) both; }
+  @keyframes slam { from { transform: rotate(-9deg) scale(1.7); opacity: 0; } to { transform: rotate(-2.5deg) scale(1); opacity: 1; } }
+  .verdict h1 { margin: 0 0 6px; font: 600 28px/1.15 var(--display); font-variation-settings: "wdth" 90; }
+  .verdict p { margin: 0; max-width: 62ch; }
+  .verdict .facts { margin-top: 10px; color: var(--muted); font-size: 14px; }
+  .verdict[data-v] .facts { color: var(--ink-2); }
+
+  .plan { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: -14px 0 0; padding: 0; list-style: none; color: var(--muted); font-size: 14px; }
+  .plan li::before { content: ""; display: inline-block; width: 6px; height: 6px; margin-right: 8px; background: var(--muted); transform: translateY(-2px); }
+
+  .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 44px; }
+  .panel { border-top: 3px solid var(--ink); padding-top: 12px; min-width: 0; }
+  .panel h2 { margin: 0 0 12px; font: 600 22px/1.1 var(--display); font-variation-settings: "wdth" 90; }
+  .empty { color: var(--muted); margin: 0; }
+  .filerow { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .mono { font-family: var(--mono); font-size: 13.5px; }
+  .tag { display: inline-block; padding: 1px 8px; background: #D5DEE7; font: 13px var(--mono); }
+  .tag.dim { background: transparent; border: 1px dashed var(--line); color: var(--muted); }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 10px; }
+  .note { color: var(--muted); font-size: 14px; max-width: 68ch; }
+
+  .matrix { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-bottom: 12px; max-width: 460px; }
+  .cell { aspect-ratio: 1; border: 2px dashed var(--line); background: transparent; }
+  .cell[data-s="queued"] { border: 2px solid var(--ink-2); background: transparent; }
+  .cell[data-s="passed"] { border: 2px solid var(--go); background: var(--go); }
+  .cell[data-s="failed"] { border: 2px solid var(--stop); background: repeating-linear-gradient(45deg, var(--stop) 0 4px, #E58C85 4px 8px); }
+  .cell[data-s="critical"]::after { content: ""; }
+  .legend { display: flex; flex-wrap: wrap; gap: 4px 16px; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+  .legend span::before { content: ""; display: inline-block; width: 11px; height: 11px; margin-right: 6px; vertical-align: -1px; border: 2px solid var(--line); }
+  .legend .p::before { background: var(--go); border-color: var(--go); }
+  .legend .f::before { background: var(--stop); border-color: var(--stop); }
+  .legend .q::before { border-color: var(--ink-2); }
+  .legend .n::before { border-style: dashed; }
+  .failed-list { margin: 8px 0 0; padding: 0; list-style: none; }
+  .failed-list li { color: var(--stop); font: 13.5px var(--mono); padding: 2px 0; }
+
+  .score { display: flex; align-items: baseline; gap: 14px; margin-bottom: 10px; }
+  .score b { font: 700 72px/.9 var(--display); font-variation-settings: "wdth" 80; }
+  .score span { font: 600 22px var(--display); font-variation-settings: "wdth" 90; }
+  .score[data-l="LOW"] { color: var(--go); } .score[data-l="MEDIUM"] { color: var(--hold); }
+  .score[data-l="HIGH"], .score[data-l="CRITICAL"] { color: var(--stop); }
+  .meter { position: relative; display: grid; grid-template-columns: 31fr 30fr 20fr 19fr; height: 14px; margin-bottom: 4px; }
+  .meter i:nth-child(1) { background: #8CCBA9; } .meter i:nth-child(2) { background: #E8C766; }
+  .meter i:nth-child(3) { background: #E39A56; } .meter i:nth-child(4) { background: #D9665D; }
+  .pin { position: absolute; top: -7px; width: 4px; height: 28px; background: var(--ink); transform: translateX(-2px); transition: left .6s cubic-bezier(.3, .8, .3, 1); }
+  .scale { display: flex; justify-content: space-between; color: var(--muted); font-size: 12.5px; margin-bottom: 14px; }
+  .parts { display: grid; gap: 7px; margin: 0; padding: 0; list-style: none; }
+  .parts li { display: grid; grid-template-columns: 11rem 1fr 3.4rem; gap: 10px; align-items: center; font-size: 14px; }
+  .parts .bar { height: 8px; background: #D5DEE7; }
+  .parts .bar i { display: block; height: 100%; background: var(--ink-2); transition: width .5s ease; }
+  .parts em { font: normal 13px var(--mono); text-align: right; color: var(--muted); }
+
+  .ledger { border-top: 3px solid var(--ink); padding-top: 12px; }
+  .ledger h2 { margin: 0 0 4px; font: 600 22px/1.1 var(--display); font-variation-settings: "wdth" 90; }
+  .ledger > p { margin: 0 0 16px; }
+  .attempt { display: grid; grid-template-columns: 9rem 1fr 1fr; gap: 6px 26px; padding: 16px 0; border-top: 1px solid var(--line); align-items: start; }
+  .attempt h3 { margin: 0; font: 600 16px var(--display); font-variation-settings: "wdth" 92; }
+  .attempt h3 small { display: block; font: 400 13px var(--body); color: var(--muted); }
+  .said { font: 700 40px/1 var(--display); font-variation-settings: "wdth" 78; }
+  .said.DEPLOY { color: var(--go); } .said.HOLD { color: var(--hold); } .said.BLOCK { color: var(--stop); }
+  .attempt[data-rejected="true"] .said { text-decoration: line-through; text-decoration-thickness: 4px; opacity: .55; }
+  .verdict-line { font: 600 18px var(--display); font-variation-settings: "wdth" 92; }
+  .verdict-line.PASS { color: var(--go); } .verdict-line.FAIL { color: var(--stop); }
+  .seeded { display: inline-block; margin-top: 6px; padding: 2px 8px; background: var(--hold-bg); border: 1px solid var(--hold); font-size: 13px; }
+  .attempt p { margin: 4px 0 0; font-size: 14px; max-width: 58ch; }
+  .rules { margin: 6px 0 0; padding-left: 18px; font-size: 14px; color: var(--ink-2); }
+
+  details.trace { border-top: 3px solid var(--ink); padding-top: 12px; }
+  details.trace summary { cursor: pointer; font: 600 22px/1.1 var(--display); font-variation-settings: "wdth" 90; list-style-position: outside; }
+  .log { margin: 14px 0 0; padding: 14px 16px; max-height: 340px; overflow: auto; background: var(--ink); color: #CFE0F1; font: 13px/1.65 var(--mono); }
+  .log div { display: grid; grid-template-columns: 7.5rem 1fr; gap: 12px; }
+  .log time { color: #6D86A1; }
+  .log .err { color: #FF9C93; }
+
+  @media (max-width: 1080px) { .grid { grid-template-columns: 1fr; } .attempt { grid-template-columns: 1fr; } }
+  @media (max-width: 860px) {
+    .console { grid-template-columns: 1fr; }
+    .rail { padding: 22px 18px; position: static; height: auto; }
+    .verdict { grid-template-columns: 1fr; }
+    .parts li { grid-template-columns: 8.5rem 1fr 3rem; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+<div class="console">
+  <aside class="rail">
+    <div class="brand">DeploySure AI<small>Decides whether a release is safe to ship, then checks its own decision.</small></div>
+
+    <form id="form" class="releases-form" style="display:grid;gap:14px">
+      <fieldset class="releases" id="releases"><legend>Release to check</legend><p style="margin:0;color:var(--rail-dim)">Loading releases</p></fieldset>
+      <button class="go" id="go" type="submit" disabled>Analyze release</button>
+    </form>
+
+    <div>
+      <div class="agents-head"><span id="pass">Agents</span><output id="elapsed">0.0 s</output></div>
+      <ol class="agents" id="agents"></ol>
+    </div>
+  </aside>
+
+  <main class="stage" aria-live="polite">
+    <section class="verdict" id="verdict" aria-label="Verdict">
+      <div class="stamp" id="stamp">Waiting</div>
+      <div>
+        <h1 id="vtitle">No release analyzed yet</h1>
+        <p id="vtext">Choose a release on the left and press Analyze release. The agents will work through it one by one, and the verdict lands here.</p>
+        <p class="facts" id="vfacts"></p>
+      </div>
+    </section>
+
+    <ul class="plan" id="plan" aria-label="Plan"></ul>
+
+    <div class="grid">
+      <section class="panel" id="p-changes"><h2>What changed</h2><p class="empty">Waiting for change analysis.</p></section>
+      <section class="panel" id="p-impact"><h2>What it touches</h2><p class="empty">Waiting for impact analysis.</p></section>
+      <section class="panel" id="p-tests"><h2>Tests</h2><p class="empty">Waiting for test selection.</p></section>
+      <section class="panel" id="p-risk"><h2>Risk</h2><p class="empty">Waiting for the risk score.</p></section>
+    </div>
+
+    <section class="ledger" id="ledger">
+      <h2>Decision ledger</h2>
+      <p class="note">Every answer the Decision agent gives, and what the Critic did with it.</p>
+      <div id="attempts"><p class="empty">No decisions yet.</p></div>
+    </section>
+
+    <details class="trace" id="trace-box">
+      <summary>Live trace</summary>
+      <div class="log" id="log" role="log"><div><time></time><span>The trace fills in as agents finish.</span></div></div>
+    </details>
+  </main>
+</div>
+
+<script>
+const AGENTS = [
+  { id: "planner", name: "Planner", how: "model" },
+  { id: "change_analysis", name: "Change analysis", how: "code" },
+  { id: "impact_analysis", name: "Impact analysis", how: "code, model explains" },
+  { id: "test_selection", name: "Test selection", how: "rule, model justifies" },
+  { id: "test_execution", name: "Test execution", how: "real pytest run" },
+  { id: "risk_assessment", name: "Risk assessment", how: "fixed formula" },
+  { id: "decision", name: "Decision", how: "model" },
+  { id: "critic", name: "Critic", how: "rules first, model explains" },
+];
+const PARTS = [
+  ["change_impact", "Size of change", 25], ["critical_component", "Critical module touched", 30],
+  ["failed_test_severity", "Failed test severity", 30], ["customer_facing", "Customer facing", 10],
+  ["failure_count", "Failure count", 5],
+];
+const $ = (id) => document.getElementById(id);
+
+// Builds DOM with textContent only, so nothing from the backend is ever parsed as HTML.
+function h(tag, attrs = {}, ...kids) {
+  const node = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") node.className = v; else if (k.startsWith("data-")) node.setAttribute(k, v); else node[k] = v;
+  }
+  for (const kid of kids.flat()) if (kid != null) node.append(kid.nodeType ? kid : document.createTextNode(kid));
+  return node;
+}
+const reveal = (panel, ...kids) => panel.replaceChildren(panel.querySelector("h2"), ...kids);
+
+let run, timer;
+
+function freshRun() {
+  return { pass: 1, attempts: [], total: null, tests: null };
+}
+
+function renderAgents(states = {}) {
+  $("agents").replaceChildren(...AGENTS.map((a) =>
+    h("li", { class: "agent", "data-state": states[a.id] || "pending", id: "ag-" + a.id }, h("i"), h("div", {}, h("b", {}, a.name), h("small", {}, a.how)))));
+}
+const setAgent = (id, state) => { const el = $("ag-" + id); if (el) el.dataset.state = state; };
+
+async function loadReleases() {
+  try {
+    const list = await (await fetch("/releases")).json();
+    $("releases").replaceChildren(h("legend", {}, "Release to check"), ...list.map((r, i) =>
+      h("label", { class: "release" }, h("input", { type: "radio", name: "rel", value: r.release_id, checked: i === 0 }),
+        h("b", {}, r.release_id), h("span", {}, r.title + " (compared with " + r.baseline + ")"))));
+    $("go").disabled = false;
+  } catch {
+    $("releases").replaceChildren(h("legend", {}, "Release to check"),
+      h("p", { style: "margin:0;color:#FF9C93" }, "Cannot reach the server. Start it with: uvicorn deploysure.server:app --port 8000"));
+  }
+}
+
+function resetStage() {
+  run = freshRun();
+  renderAgents();
+  $("pass").textContent = "Agents";
+  document.querySelectorAll(".panel").forEach((p) => reveal(p, h("p", { class: "empty" }, "Waiting for this agent.")));
+  $("attempts").replaceChildren(h("p", { class: "empty" }, "No decisions yet."));
+  $("plan").replaceChildren();
+  $("log").replaceChildren();
+  const v = $("verdict"); delete v.dataset.v;
+  $("stamp").textContent = "Checking"; $("vtitle").textContent = "Agents are working";
+  $("vtext").textContent = "The verdict appears when the Critic has approved a decision."; $("vfacts").textContent = "";
+}
+
+function log(ev, line) {
+  const t = (ev.timestamp || "").slice(11, 23);
+  $("log").append(h("div", {}, h("time", {}, t), h("span", {}, line)));
+  $("log").scrollTop = 1e9;
+}
+
+function renderLedger() {
+  $("attempts").replaceChildren(...run.attempts.map((a, i) => {
+    const rejected = a.critic === "FAIL" && !a.escalated;
+    return h("div", { class: "attempt", "data-rejected": String(rejected) },
+      h("h3", {}, "Attempt " + (i + 1), h("small", {}, i === 0 ? "first pass" : "after the Critic's feedback")),
+      h("div", {}, h("div", { class: "said " + a.decision }, a.decision), a.seeded ? h("span", { class: "seeded" }, "Demo seed: this answer is forced on purpose") : null,
+        h("p", {}, a.reason)),
+      h("div", {}, a.critic ? h("div", { class: "verdict-line " + a.critic }, a.critic === "PASS" ? "Critic approved" : "Critic rejected") : h("div", { class: "note" }, "Critic is reviewing"),
+        a.criticReason ? h("p", {}, a.criticReason) : null,
+        a.rules ? h("ul", { class: "rules" }, a.rules.map((r) => h("li", {}, r))) : null));
+  }));
+}
+
+const handlers = {
+  planner(u) {
+    $("plan").replaceChildren(...u.tasks.map((t) => h("li", {}, t)));
+  },
+  change_analysis(u) {
+    reveal($("p-changes"),
+      ...u.changed_files.map((f) => h("div", { class: "filerow" }, h("span", { class: "mono" }, f), (u.changed_functions[f] || []).map((fn) => h("span", { class: "tag" }, fn)))),
+      h("p", { class: "note" }, u.lines_changed + " lines changed compared with the baseline."));
+  },
+  impact_analysis(u) {
+    reveal($("p-impact"),
+      h("div", { class: "tags" }, u.impacted_modules.map((m) => h("span", { class: "tag" + (m.startsWith("test_") ? " dim" : "") }, m))),
+      h("p", { class: "note" }, u.impact_explanation));
+  },
+  test_selection(u) {
+    const m = /of (\d+) tests/.exec((u.trace || [""])[0]);
+    run.total = m ? +m[1] : u.selected_tests.length;
+    run.selected = u.selected_tests;
+    drawTests(null, u.selection_reason);
+  },
+  test_execution(u) {
+    run.tests = u.test_results;
+    drawTests(u.test_results, null);
+  },
+  risk_assessment(u) {
+    reveal($("p-risk"),
+      h("div", { class: "score", "data-l": u.risk_level }, h("b", {}, String(u.risk_score)), h("span", {}, u.risk_level + " risk")),
+      h("div", { class: "meter", role: "img", "aria-label": "Risk " + u.risk_score + " of 100" }, h("i"), h("i"), h("i"), h("i"), h("span", { class: "pin", style: "left:" + u.risk_score + "%" })),
+      h("div", { class: "scale" }, h("span", {}, "0"), h("span", {}, "30"), h("span", {}, "60"), h("span", {}, "80"), h("span", {}, "100")),
+      h("ul", { class: "parts" }, PARTS.map(([k, label, max]) =>
+        h("li", {}, h("span", {}, label), h("span", { class: "bar" }, h("i", { style: "width:" + (100 * u.risk_components[k] / max) + "%" })), h("em", {}, u.risk_components[k] + "/" + max)))));
+  },
+  decision(u) {
+    run.attempts.push({ decision: u.decision, reason: u.decision_reason, seeded: u.decision_reason.startsWith("[DEMO SEED]") });
+    renderLedger();
+  },
+  critic(u) {
+    Object.assign(run.attempts.at(-1), { critic: u.critic_result, criticReason: u.critic_reason, rules: u.critic_rules });
+    renderLedger();
+  },
+  replan() { run.pass += 1; $("pass").textContent = "Agents, pass " + run.pass; renderAgents(); },
+  manual_review() { run.attempts.at(-1).escalated = true; renderLedger(); },
+};
+
+function drawTests(results, reason) {
+  const rows = results ? results.results : run.selected.map((id) => ({ id, status: "queued" }));
+  const cells = rows.map((r) => h("span", { class: "cell", "data-s": r.status, title: r.id + (r.status === "queued" ? " (selected)" : " " + r.status) }));
+  for (let i = rows.length; i < run.total; i++) cells.push(h("span", { class: "cell", "data-s": "skipped", title: "not selected" }));
+  const kids = [
+    h("div", { class: "legend" }, h("span", { class: "p" }, "Passed"), h("span", { class: "f" }, "Failed"), h("span", { class: "q" }, "Selected, not run yet"), h("span", { class: "n" }, "Not selected")),
+    h("div", { class: "matrix" }, cells),
+  ];
+  if (results) {
+    kids.push(h("p", { class: "note" }, results.error ? "Tests could not run: " + results.error : `${results.passed} passed, ${results.failed} failed, ${results.total} of ${run.total} tests run.`));
+    if (results.failed_tests.length) kids.push(h("ul", { class: "failed-list" }, results.failed_tests.map((t) => h("li", {}, t + (results.failed_critical.includes(t) ? "  (critical)" : "")))));
+  } else {
+    kids.push(h("p", { class: "note" }, `${run.selected.length} of ${run.total} tests selected. ${reason}`));
+  }
+  reveal($("p-tests"), ...kids);
+}
+
+function showFinal(r) {
+  const v = $("verdict"); v.dataset.v = r.decision;
+  $("stamp").textContent = r.decision;
+  const escalated = r.critic_result !== "PASS";
+  $("vtitle").textContent = { DEPLOY: "Cleared to deploy", HOLD: "Hold for review", BLOCK: "Blocked from release" }[r.decision];
+  $("vtext").textContent = r.decision_reason;
+  $("vfacts").textContent = (escalated ? "The Critic never approved a decision, so a person must review this release. "
+    : r.retry_count === 0 ? "The Critic approved the first decision. "
+    : `The Critic rejected ${r.retry_count} earlier decision${r.retry_count > 1 ? "s" : ""} before approving this one. `)
+    + `Risk ${r.risk_score} (${r.risk_level}). ${r.test_results.passed} of ${r.test_results.total} tests passed.`;
+}
+
+function onEvent(ev) {
+  if (ev.node === "error") { log(ev, "Error: " + ev.state_update.error); return finish(true); }
+  if (ev.node === "final") return showFinal(ev.final_report), finish();
+  setAgent(ev.node, "done");
+  (handlers[ev.node] || (() => {}))(ev.state_update);
+  for (const line of ev.state_update.trace || []) log(ev, line);
+  const i = AGENTS.findIndex((a) => a.id === ev.node);
+  if (i >= 0 && i < AGENTS.length - 1) setAgent(AGENTS[i + 1].id, "running");
+  if (ev.node === "replan") setAgent("planner", "running");
+}
+
+function finish(failed) {
+  clearInterval(timer);
+  $("go").disabled = false; $("go").textContent = "Analyze again";
+  if (failed) { $("stamp").textContent = "Error"; $("vtitle").textContent = "The analysis did not finish"; $("vtext").textContent = "Open the live trace for the error message, then try again."; }
+}
+
+async function analyze(id) {
+  resetStage();
+  $("go").disabled = true; $("go").textContent = "Analyzing";
+  const t0 = performance.now();
+  timer = setInterval(() => { $("elapsed").textContent = ((performance.now() - t0) / 1000).toFixed(1) + " s"; }, 100);
+  setAgent("planner", "running");
+  try {
+    const res = await fetch("/analyze/" + encodeURIComponent(id), { method: "POST" });
+    if (!res.ok) throw new Error((await res.json()).detail || res.statusText);
+    const reader = res.body.getReader(), dec = new TextDecoder();
+    let buf = "";
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let cut;
+      while ((cut = buf.indexOf("\n\n")) >= 0) {
+        const frame = buf.slice(0, cut); buf = buf.slice(cut + 2);
+        if (frame.startsWith("data: ")) onEvent(JSON.parse(frame.slice(6)));
+      }
+    }
+  } catch (err) {
+    log({ timestamp: "" }, "Error: " + err.message);
+    $("log").lastChild.className = "err"; finish(true);
+  }
+}
+
+$("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  const picked = document.querySelector("input[name=rel]:checked");
+  if (picked) analyze(picked.value);
+});
+
+run = freshRun(); renderAgents(); loadReleases();
+</script>
+</body>
+</html>

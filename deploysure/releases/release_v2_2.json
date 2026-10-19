@@ -1,0 +1,6 @@
+{
+  "release_id": "v2.2",
+  "baseline": "v2.0",
+  "title": "Deduct processing fee from refunds",
+  "notes": "Refunds are now returned net of the card processing fee."
+}
