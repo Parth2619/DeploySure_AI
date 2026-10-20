@@ -1,0 +1,257 @@
+{
+  "repo": "C:\\Users\\pradi\\OneDrive\\Documents\\GitHub\\priceright-demo",
+  "old": "e9dbd31047d5bbf7f6ab44cd7168d0e5aaf82f0c",
+  "new": "286602216a0744f48b22ee76ffe3dc3caf2517b8",
+  "old_sha": "e9dbd31047d5bbf7f6ab44cd7168d0e5aaf82f0c",
+  "new_sha": "286602216a0744f48b22ee76ffe3dc3caf2517b8",
+  "layers_changed": {
+    "backend": [
+      "backend/pricing_buggy.py"
+    ]
+  },
+  "contract_issues": [],
+  "endpoint_changes": [],
+  "config_changes": [],
+  "dependency_changes": [],
+  "check_sources": {
+    "api": "ai+probes",
+    "browser": "ai+smoke"
+  },
+  "api_summary": {
+    "unchanged": 8,
+    "benign_change": 0,
+    "regression": 0,
+    "unreliable": 0,
+    "regressions": []
+  },
+  "browser_summary": {
+    "unchanged": 3,
+    "ui_changed": 0,
+    "regression": 0,
+    "unreliable": 1,
+    "regressions": []
+  },
+  "api_results": [
+    {
+      "name": "Health check",
+      "method": "GET",
+      "path": "/api/health",
+      "reason": "Verify the service is up",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Quote no discount",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Baseline price with 0% discount",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Quote typical discount",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Detect regression where 10% discount is applied incorrectly",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Quote max discount",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Ensure 100% discount yields zero final price",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Quote invalid high discount",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Validate input validation for discount >100",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 400,
+      "new_status": 400
+    },
+    {
+      "name": "Quote negative price",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Validate input validation for negative price",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 400,
+      "new_status": 400
+    },
+    {
+      "name": "POST /api/quote (sample 1)",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": null,
+        "new": null
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "POST /api/quote (sample 2)",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": null,
+        "new": null
+      },
+      "old_status": 200,
+      "new_status": 200
+    }
+  ],
+  "browser_results": [
+    {
+      "name": "Quote calculation after price bug fix",
+      "reason": "Verify that the price displayed reflects the corrected backend logic",
+      "verdict": "unchanged",
+      "differences": [],
+      "old": {
+        "requests": [
+          "POST /api/quote 200"
+        ],
+        "step_error": null
+      },
+      "new": {
+        "requests": [
+          "POST /api/quote 200"
+        ],
+        "step_error": null
+      }
+    },
+    {
+      "name": "Error handling on invalid input",
+      "reason": "Ensure no error message appears when valid data is submitted",
+      "verdict": "unreliable",
+      "differences": [],
+      "old": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      },
+      "new": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      }
+    },
+    {
+      "name": "Discount display after successful quote",
+      "reason": "Check that discount element updates correctly after API call",
+      "verdict": "unchanged",
+      "differences": [],
+      "old": {
+        "requests": [
+          "POST /api/quote 200"
+        ],
+        "step_error": null
+      },
+      "new": {
+        "requests": [
+          "POST /api/quote 200"
+        ],
+        "step_error": null
+      }
+    },
+    {
+      "name": "Open the page and press the first button",
+      "reason": "a generic smoke check",
+      "verdict": "unchanged",
+      "differences": [],
+      "old": {
+        "requests": [
+          "POST /api/quote 200"
+        ],
+        "step_error": null
+      },
+      "new": {
+        "requests": [
+          "POST /api/quote 200"
+        ],
+        "step_error": null
+      }
+    }
+  ],
+  "start_error": "",
+  "browser_error": "",
+  "layer_verdict": {
+    "layers": [],
+    "primary": "none",
+    "confidence": "high",
+    "reasons": [
+      "No regression was found."
+    ],
+    "evidence": {
+      "static": 0,
+      "api": 0,
+      "browser": 0
+    }
+  },
+  "risk_score": 3,
+  "risk_level": "LOW",
+  "risk_components": {
+    "change_impact": 3,
+    "contract_break": 0,
+    "api_regression": 0,
+    "ui_regression": 0,
+    "not_verified": 0
+  },
+  "decision": "DEPLOY",
+  "decision_reason": "No regressions, low risk, all checks passed",
+  "critic_result": "PASS",
+  "critic_reason": "Decision DEPLOY is consistent with the rules (no regression found, every check ran and risk is LOW: DEPLOY allowed). The decision meets the required_at_least DEPLOY rule, all checks passed with low risk, and no regression was found, satisfying the deployment criteria.",
+  "retry_count": 0,
+  "trace": [
+    "planner: planned 5 tasks",
+    "change_scan: 1 file(s) changed: backend (1)",
+    "check_writing: 8 API check(s) from ai+probes, 4 browser scenario(s) from ai+smoke",
+    "differential_run: API 0 regression(s) of 8, browser 0 regression(s) of 4",
+    "layer_attribution: none (high confidence)",
+    "risk_assessment: score 3 (LOW), components {'change_impact': 3, 'contract_break': 0, 'api_regression': 0, 'ui_regression': 0, 'not_verified': 0}",
+    "decision: DEPLOY",
+    "critic: PASS, decision DEPLOY vs required at least DEPLOY"
+  ]
+}

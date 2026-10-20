@@ -1,0 +1,169 @@
+{
+  "repo": "D:\\STUDY\\FAAI\\Project\\DeploySure AI\\deploysure\\demo_apps\\tinyshop",
+  "old": "33ddad2fc948ceb48cf397816e49942d8c5e98df",
+  "new": "9b52a2d8b0735b53ed33f3d7811f75c3b669e92f",
+  "old_sha": "33ddad2fc948ceb48cf397816e49942d8c5e98df",
+  "new_sha": "9b52a2d8b0735b53ed33f3d7811f75c3b669e92f",
+  "layers_changed": {
+    "frontend": [
+      "frontend/app.js"
+    ]
+  },
+  "contract_issues": [
+    {
+      "kind": "unknown_endpoint",
+      "call": "GET /api/product",
+      "file": "frontend/app.js"
+    }
+  ],
+  "endpoint_changes": [],
+  "config_changes": [],
+  "dependency_changes": [],
+  "check_sources": {
+    "api": "ai+probes",
+    "browser": "ai+smoke"
+  },
+  "api_summary": {
+    "unchanged": 6,
+    "benign_change": 0,
+    "regression": 0,
+    "unreliable": 0,
+    "regressions": []
+  },
+  "browser_summary": {
+    "unchanged": 0,
+    "ui_changed": 0,
+    "regression": 0,
+    "unreliable": 0,
+    "regressions": []
+  },
+  "api_results": [
+    {
+      "name": "Health endpoint reachable",
+      "method": "GET",
+      "path": "/api/health",
+      "reason": "Ensures the service is up and responding",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Fetch product list",
+      "method": "GET",
+      "path": "/api/products",
+      "reason": "Validates correct product endpoint after recent change",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Create order with single item quantity 1",
+      "method": "POST",
+      "path": "/api/orders",
+      "reason": "Ensures order creation works for minimal quantity",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Create order with multiple items and quantity >1",
+      "method": "POST",
+      "path": "/api/orders",
+      "reason": "Checks handling of multiple line items and larger quantities",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Create order with unknown product id",
+      "method": "POST",
+      "path": "/api/orders",
+      "reason": "Verifies proper error handling for invalid product references",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 400,
+      "new_status": 400
+    },
+    {
+      "name": "POST /api/orders (sample 2)",
+      "method": "POST",
+      "path": "/api/orders",
+      "reason": "",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": null,
+        "new": null
+      },
+      "old_status": 200,
+      "new_status": 200
+    }
+  ],
+  "browser_results": [],
+  "start_error": "",
+  "browser_error": "Chromium could not start (Error). Run: python -m playwright install chromium",
+  "layer_verdict": {
+    "layers": [
+      "frontend"
+    ],
+    "primary": "frontend",
+    "confidence": "medium",
+    "reasons": [
+      "frontend/app.js calls GET /api/product, which the backend does not serve.",
+      "Some checks did not run: Chromium could not start (Error). Run: python -m playwright install chromium"
+    ],
+    "evidence": {
+      "static": 1,
+      "api": 0,
+      "browser": 0
+    }
+  },
+  "risk_score": 43,
+  "risk_level": "MEDIUM",
+  "risk_components": {
+    "change_impact": 3,
+    "contract_break": 30,
+    "api_regression": 0,
+    "ui_regression": 0,
+    "not_verified": 10
+  },
+  "decision": "BLOCK",
+  "decision_reason": "Frontend calls an API endpoint that the backend does not serve and required checks failed to run",
+  "critic_result": "PASS",
+  "critic_reason": "Decision BLOCK is consistent with the rules (the page and the API no longer agree (1 issue(s))). The decision aligns with the rule that any discrepancy between the page and API triggers a block, satisfying the required at\u2011least BLOCK condition.",
+  "retry_count": 0,
+  "trace": [
+    "planner: planned 8 tasks",
+    "change_scan: 1 file(s) changed: frontend (1), 1 contract issue(s)",
+    "check_writing: 6 API check(s) from ai+probes, 4 browser scenario(s) from ai+smoke",
+    "differential_run: API 0 regression(s) of 6, browser 0 regression(s) of 0 (Chromium could not start (Error). Run: python -m playwright install chromium)",
+    "layer_attribution: frontend (medium confidence)",
+    "risk_assessment: score 43 (MEDIUM), components {'change_impact': 3, 'contract_break': 30, 'api_regression': 0, 'ui_regression': 0, 'not_verified': 10}",
+    "decision: BLOCK",
+    "critic: PASS, decision BLOCK vs required at least BLOCK"
+  ]
+}

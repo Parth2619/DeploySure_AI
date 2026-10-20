@@ -1,0 +1,78 @@
+{
+  "repo": "C:\\Users\\pradi\\OneDrive\\Documents\\GitHub\\priceright-demo",
+  "old": "286602216a0744f48b22ee76ffe3dc3caf2517b8",
+  "new": "ff2955a015c3ba3a4ab314cc948bd09b2de826c1",
+  "old_sha": "286602216a0744f48b22ee76ffe3dc3caf2517b8",
+  "new_sha": "ff2955a015c3ba3a4ab314cc948bd09b2de826c1",
+  "layers_changed": {
+    "backend": [
+      "backend/pricing.py"
+    ]
+  },
+  "contract_issues": [],
+  "endpoint_changes": [],
+  "config_changes": [],
+  "dependency_changes": [],
+  "check_sources": {
+    "api": "ai+probes",
+    "browser": "ai+smoke"
+  },
+  "api_summary": {
+    "unchanged": 0,
+    "benign_change": 0,
+    "regression": 0,
+    "unreliable": 0,
+    "regressions": []
+  },
+  "browser_summary": {
+    "unchanged": 0,
+    "ui_changed": 0,
+    "regression": 0,
+    "unreliable": 0,
+    "regressions": []
+  },
+  "api_results": [],
+  "browser_results": [],
+  "start_error": "the app exited with code 1 before it was ready.\nxtvars=reset_contextvars,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"D:\\STUDY\\FAAI\\Project\\DeploySure AI\\deploysure\\.venv\\Lib\\site-packages\\uvicorn\\main.py\", line 620, in run\n    config.load_app()\n    ~~~~~~~~~~~~~~~^^\n  File \"D:\\",
+  "browser_error": "",
+  "layer_verdict": {
+    "layers": [
+      "backend"
+    ],
+    "primary": "backend",
+    "confidence": "medium",
+    "reasons": [
+      "The new version did not start: the app exited with code 1 before it was ready.\nxtvars=reset_contextvars,\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"D:\\STUDY\\FA"
+    ],
+    "evidence": {
+      "static": 0,
+      "api": 0,
+      "browser": 0
+    }
+  },
+  "risk_score": 100,
+  "risk_level": "CRITICAL",
+  "risk_components": {
+    "change_impact": 3,
+    "contract_break": 0,
+    "api_regression": 0,
+    "ui_regression": 0,
+    "not_verified": 0,
+    "start_failure": 100
+  },
+  "decision": "BLOCK",
+  "decision_reason": "The app failed to start, exiting with code 1, which is a critical regression.",
+  "critic_result": "PASS",
+  "critic_reason": "Decision BLOCK is consistent with the rules (the new version does not start; risk level CRITICAL). The decision aligns with the rule that any release with a critical risk level and a non\u2011starting new version must be blocked, satisfying all applicable constraints.",
+  "retry_count": 0,
+  "trace": [
+    "planner: planned 5 tasks",
+    "change_scan: 1 file(s) changed: backend (1)",
+    "check_writing: 7 API check(s) from ai+probes, 4 browser scenario(s) from ai+smoke",
+    "differential_run: the new version did not start: the app exited with code 1 before it was ready.\nxtvars=reset_contextvars,\n        ^^^^^^^^^^^^^^^^^^",
+    "layer_attribution: backend (medium confidence)",
+    "risk_assessment: score 100 (CRITICAL), components {'change_impact': 3, 'contract_break': 0, 'api_regression': 0, 'ui_regression': 0, 'not_verified': 0, 'start_failure': 100}",
+    "decision: BLOCK",
+    "critic: PASS, decision BLOCK vs required at least BLOCK"
+  ]
+}

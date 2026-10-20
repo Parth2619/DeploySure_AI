@@ -1,0 +1,297 @@
+{
+  "repo": "C:\\Users\\pradi\\OneDrive\\Documents\\GitHub\\priceright-demo",
+  "old": "v1.2",
+  "new": "v1.1",
+  "old_sha": "e9dbd31047d5bbf7f6ab44cd7168d0e5aaf82f0c",
+  "new_sha": "2f951879d377ae819b9cc88b65e53b585a12163f",
+  "layers_changed": {
+    "backend": [
+      "backend/app.py"
+    ],
+    "tests": [
+      "tests/test_api.py"
+    ]
+  },
+  "contract_issues": [],
+  "endpoint_changes": [
+    {
+      "endpoint": "POST /api/quote",
+      "kind": "fields_removed",
+      "fields": [
+        "savings"
+      ]
+    }
+  ],
+  "config_changes": [],
+  "dependency_changes": [],
+  "check_sources": {
+    "api": "ai+probes",
+    "browser": "ai+smoke"
+  },
+  "api_summary": {
+    "unchanged": 2,
+    "benign_change": 0,
+    "regression": 5,
+    "unreliable": 1,
+    "regressions": [
+      "Quote with no discount",
+      "Quote with typical discount",
+      "Quote with high discount",
+      "POST /api/quote (sample 1)",
+      "POST /api/quote (sample 2)"
+    ]
+  },
+  "browser_summary": {
+    "unchanged": 1,
+    "ui_changed": 0,
+    "regression": 0,
+    "unreliable": 3,
+    "regressions": []
+  },
+  "api_results": [
+    {
+      "name": "Health check",
+      "method": "GET",
+      "path": "/api/health",
+      "reason": "Verify the service is up after the change",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Quote with no discount",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Ensure quote works with zero discount and returns original and final price",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "field_removed",
+          "field": "savings"
+        }
+      ],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Quote with typical discount",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Validate calculation for a common discount scenario",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "field_removed",
+          "field": "savings"
+        }
+      ],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Quote with high discount",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Check handling of large discount values",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "field_removed",
+          "field": "savings"
+        }
+      ],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Quote with negative price",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Ensure server returns error for invalid negative price",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": false,
+        "new": false
+      },
+      "old_status": 400,
+      "new_status": 400
+    },
+    {
+      "name": "Quote missing fields",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Validate request validation when required fields are missing",
+      "verdict": "unreliable",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 422,
+      "new_status": 422
+    },
+    {
+      "name": "POST /api/quote (sample 1)",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "field_removed",
+          "field": "savings"
+        }
+      ],
+      "assertion": {
+        "old": null,
+        "new": null
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "POST /api/quote (sample 2)",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "field_removed",
+          "field": "savings"
+        }
+      ],
+      "assertion": {
+        "old": null,
+        "new": null
+      },
+      "old_status": 200,
+      "new_status": 200
+    }
+  ],
+  "browser_results": [
+    {
+      "name": "Verify discount applied",
+      "reason": "Ensure discount element updates after quoting",
+      "verdict": "unreliable",
+      "differences": [],
+      "old": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      },
+      "new": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      }
+    },
+    {
+      "name": "Check error handling on invalid input",
+      "reason": "Validate error message appears for bad quote",
+      "verdict": "unreliable",
+      "differences": [],
+      "old": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      },
+      "new": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      }
+    },
+    {
+      "name": "Confirm price display after successful quote",
+      "reason": "Verify price element reflects API response",
+      "verdict": "unreliable",
+      "differences": [],
+      "old": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      },
+      "new": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      }
+    },
+    {
+      "name": "Open the page and press the first button",
+      "reason": "a generic smoke check",
+      "verdict": "unchanged",
+      "differences": [],
+      "old": {
+        "requests": [
+          "POST /api/quote 200"
+        ],
+        "step_error": null
+      },
+      "new": {
+        "requests": [
+          "POST /api/quote 200"
+        ],
+        "step_error": null
+      }
+    }
+  ],
+  "start_error": "",
+  "browser_error": "",
+  "layer_verdict": {
+    "layers": [
+      "backend"
+    ],
+    "primary": "backend",
+    "confidence": "medium",
+    "reasons": [
+      "API check 'Quote with no discount' gives a different answer: field savings was removed.",
+      "API check 'Quote with typical discount' gives a different answer: field savings was removed.",
+      "API check 'Quote with high discount' gives a different answer: field savings was removed.",
+      "API check 'POST /api/quote (sample 1)' gives a different answer: field savings was removed.",
+      "API check 'POST /api/quote (sample 2)' gives a different answer: field savings was removed."
+    ],
+    "evidence": {
+      "static": 0,
+      "api": 5,
+      "browser": 0
+    }
+  },
+  "risk_score": 45,
+  "risk_level": "MEDIUM",
+  "risk_components": {
+    "change_impact": 5,
+    "contract_break": 0,
+    "api_regression": 40,
+    "ui_regression": 0,
+    "not_verified": 0
+  },
+  "decision": "BLOCK",
+  "decision_reason": "API responses no longer match expected fields, indicating broken functionality",
+  "critic_result": "PASS",
+  "critic_reason": "Decision BLOCK is consistent with the rules (an API answer lost a field, changed its status or failed). The decision aligns with the rule that any API answer missing a field, changing status, or failing triggers a block, satisfying the required at least BLOCK condition.",
+  "retry_count": 0,
+  "trace": [
+    "planner: planned 5 tasks",
+    "change_scan: 2 file(s) changed: backend (1), tests (1)",
+    "check_writing: 8 API check(s) from ai+probes, 4 browser scenario(s) from ai+smoke",
+    "differential_run: API 5 regression(s) of 8, browser 0 regression(s) of 4",
+    "layer_attribution: backend (medium confidence)",
+    "risk_assessment: score 45 (MEDIUM), components {'change_impact': 5, 'contract_break': 0, 'api_regression': 40, 'ui_regression': 0, 'not_verified': 0}",
+    "decision: BLOCK",
+    "critic: PASS, decision BLOCK vs required at least BLOCK"
+  ]
+}

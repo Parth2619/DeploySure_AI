@@ -1,0 +1,14 @@
+﻿[planner        ] done  planner: planned 7 tasks for v2.1 (AI not used, used fixed plan. Reason: RuntimeError: GROQ_API_KEY is not set)
+[change_analysis] done  change_analysis: 2 line(s) changed vs v2.0: notification.py (order_confirmation)
+[impact_analysis] done  impact_analysis: 4 module(s) impacted: notification, orders, test_notification, test_orders (AI not used, used default text. Reason: RuntimeError: GROQ_API_KEY is not set)
+[test_selection ] done  test_selection: 6 of 20 tests selected, rule: run tests of the changed and impacted modules (AI not used, used rule text. Reason: RuntimeError: GROQ_API_KEY is not set)
+[test_execution ] done  test_execution: 6 passed, 0 failed (0 critical) of 6
+[risk_assessment] done  risk_assessment: score 12 (LOW), components {'change_impact': 4, 'critical_component': 0, 'failed_test_severity': 0, 'customer_facing': 8, 'failure_count': 0}
+[decision       ] done  decision: DEPLOY (seeded by DEMO_SEED_WRONG_DECISION, first pass only)
+[critic         ] done  critic: PASS, decision DEPLOY vs required at least DEPLOY (AI not used, rule summary only. Reason: RuntimeError: GROQ_API_KEY is not set)
+
+Release v2.1: DEPLOY
+  reason:  [DEMO SEED] First pass is forced to DEPLOY for the demo. The Critic checks it next.
+  risk:    12 (LOW)
+  tests:   6 passed, 0 failed of 6
+  critic:  PASS after 0 retry(ies). Decision DEPLOY is consistent with the rules (all selected tests passed and risk is LOW: DEPLOY allowed). Written reasoning unavailable.

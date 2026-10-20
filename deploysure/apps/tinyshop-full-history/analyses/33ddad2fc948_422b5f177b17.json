@@ -1,0 +1,1399 @@
+{
+  "repo": "D:\\STUDY\\FAAI\\Project\\DeploySure AI\\deploysure\\demo_apps\\tinyshop",
+  "old": "33ddad2fc948ceb48cf397816e49942d8c5e98df",
+  "new": "422b5f177b17e97493c421fec754db2165e9060b",
+  "old_sha": "33ddad2fc948ceb48cf397816e49942d8c5e98df",
+  "new_sha": "422b5f177b17e97493c421fec754db2165e9060b",
+  "layers_changed": {
+    "frontend": [
+      "frontend/app.js"
+    ]
+  },
+  "contract_issues": [
+    {
+      "kind": "unknown_endpoint",
+      "call": "GET /api/product",
+      "file": "frontend/app.js"
+    }
+  ],
+  "endpoint_changes": [],
+  "config_changes": [],
+  "dependency_changes": [],
+  "check_sources": {
+    "api": "ai+probes",
+    "browser": "ai+smoke"
+  },
+  "api_summary": {
+    "unchanged": 7,
+    "benign_change": 0,
+    "regression": 0,
+    "unreliable": 0,
+    "regressions": []
+  },
+  "browser_summary": {
+    "unchanged": 0,
+    "ui_changed": 0,
+    "regression": 4,
+    "unreliable": 0,
+    "regressions": [
+      "Verify product list loads",
+      "Add product to cart",
+      "Place order error handling",
+      "Open the page and press the first button"
+    ]
+  },
+  "api_results": [
+    {
+      "name": "Health endpoint reachable",
+      "method": "GET",
+      "path": "/api/health",
+      "reason": "Ensures the service is up and health check returns OK",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Fetch product list",
+      "method": "GET",
+      "path": "/api/products",
+      "reason": "Validates the correct products endpoint returns data",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Create order with single item quantity 1",
+      "method": "POST",
+      "path": "/api/orders",
+      "reason": "Ensures order creation works for minimal quantity",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": false,
+        "new": false
+      },
+      "old_status": 400,
+      "new_status": 400
+    },
+    {
+      "name": "Create order with multiple items quantity >1",
+      "method": "POST",
+      "path": "/api/orders",
+      "reason": "Checks handling of larger quantity values",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": false,
+        "new": false
+      },
+      "old_status": 400,
+      "new_status": 400
+    },
+    {
+      "name": "Create order with unknown product id",
+      "method": "POST",
+      "path": "/api/orders",
+      "reason": "Verifies proper error response for invalid product reference",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 400,
+      "new_status": 400
+    },
+    {
+      "name": "POST /api/orders (sample 1)",
+      "method": "POST",
+      "path": "/api/orders",
+      "reason": "",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": null,
+        "new": null
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "POST /api/orders (sample 2)",
+      "method": "POST",
+      "path": "/api/orders",
+      "reason": "",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": null,
+        "new": null
+      },
+      "old_status": 200,
+      "new_status": 200
+    }
+  ],
+  "browser_results": [
+    {
+      "name": "Verify product list loads",
+      "reason": "Ensure GET /api/product returns products and UI updates",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "new_failed_request",
+          "request": "GET /api/product 404"
+        },
+        {
+          "kind": "request_missing",
+          "request": "GET /api/products 200"
+        },
+        {
+          "kind": "text_changed",
+          "field": "2:#products",
+          "old": [
+            "Notebook $4.50 Add to cart Pen $1.25 Add to cart Backpack $32.00 Add to cart"
+          ],
+          "new": [
+            ""
+          ]
+        }
+      ],
+      "old": {
+        "requests": [
+          "GET /api/products 200"
+        ],
+        "step_error": null
+      },
+      "new": {
+        "requests": [
+          "GET /api/product 404"
+        ],
+        "step_error": null
+      }
+    },
+    {
+      "name": "Add product to cart",
+      "reason": "Check that adding a product updates cart and total",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "step_failed",
+          "detail": "step 2 (click .add): TimeoutError"
+        },
+        {
+          "kind": "new_failed_request",
+          "request": "GET /api/product 404"
+        },
+        {
+          "kind": "request_missing",
+          "request": "GET /api/products 200"
+        }
+      ],
+      "old": {
+        "requests": [
+          "GET /api/products 200"
+        ],
+        "step_error": null
+      },
+      "new": {
+        "requests": [
+          "GET /api/product 404"
+        ],
+        "step_error": "step 2 (click .add): TimeoutError"
+      }
+    },
+    {
+      "name": "Place order error handling",
+      "reason": "Validate error display when POST /api/orders fails after product load",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "step_failed",
+          "detail": "step 2 (click .add): TimeoutError"
+        },
+        {
+          "kind": "new_failed_request",
+          "request": "GET /api/product 404"
+        },
+        {
+          "kind": "request_missing",
+          "request": "GET /api/products 200"
+        },
+        {
+          "kind": "request_missing",
+          "request": "POST /api/orders 200"
+        }
+      ],
+      "old": {
+        "requests": [
+          "GET /api/products 200",
+          "POST /api/orders 200"
+        ],
+        "step_error": null
+      },
+      "new": {
+        "requests": [
+          "GET /api/product 404"
+        ],
+        "step_error": "step 2 (click .add): TimeoutError"
+      }
+    },
+    {
+      "name": "Open the page and press the first button",
+      "reason": "a generic smoke check",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "step_failed",
+          "detail": "step 4 (click button): TimeoutError"
+        },
+        {
+          "kind": "new_failed_request",
+          "request": "GET /api/product 404"
+        },
+        {
+          "kind": "request_missing",
+          "request": "GET /api/products 200"
+        },
+        {
+          "kind": "text_changed",
+          "field": "3:body",
+          "old": [
+            "TinyShop Notebook $4.50 Add to cart Pen $1.25 Add to cart Backpack $32.00 Add to cart Your cart Total: $0.00 Place order"
+          ],
+          "new": [
+            "TinyShop Could not load products Your cart Total: $0.00 Place order"
+          ]
+        }
+      ],
+      "old": {
+        "requests": [
+          "GET /api/products 200"
+        ],
+        "step_error": null
+      },
+      "new": {
+        "requests": [
+          "GET /api/product 404"
+        ],
+        "step_error": "step 4 (click button): TimeoutError"
+      }
+    }
+  ],
+  "start_error": "",
+  "browser_error": "",
+  "layer_verdict": {
+    "layers": [
+      "frontend"
+    ],
+    "primary": "frontend",
+    "confidence": "high",
+    "reasons": [
+      "frontend/app.js calls GET /api/product, which the backend does not serve."
+    ],
+    "evidence": {
+      "static": 1,
+      "api": 0,
+      "browser": 4
+    }
+  },
+  "risk_score": 73,
+  "risk_level": "HIGH",
+  "risk_components": {
+    "change_impact": 3,
+    "contract_break": 30,
+    "api_regression": 0,
+    "ui_regression": 40,
+    "not_verified": 0
+  },
+  "decision": "BLOCK",
+  "decision_reason": "Frontend calls an API endpoint that the backend does not serve, causing a contract break",
+  "critic_result": "PASS",
+  "critic_reason": "Decision BLOCK is consistent with the rules (the page and the API no longer agree (1 issue(s)); the page behaves differently in a way that looks broken). The decision satisfies the rules because the identified discrepancies and broken behavior trigger the required block condition.",
+  "retry_count": 0,
+  "trace": [
+    "change_scan: 1 file(s) changed: frontend (1), 1 contract issue(s)",
+    "planner: focus api_contract",
+    "check_writing: 7 API check(s) from ai+probes, 4 browser scenario(s) from ai+smoke",
+    "differential_run: API 0 regression(s) of 7, browser 4 regression(s) of 4",
+    "layer_attribution: frontend (high confidence)",
+    "risk_assessment: score 73 (HIGH), components {'change_impact': 3, 'contract_break': 30, 'api_regression': 0, 'ui_regression': 40, 'not_verified': 0}",
+    "decision: BLOCK",
+    "critic: PASS, decision BLOCK vs required at least BLOCK"
+  ],
+  "steps": [
+    {
+      "node": "change_scan",
+      "timestamp": "2026-10-20T22:59:09.601",
+      "output": {
+        "scan": {
+          "old": "33ddad2fc948ceb48cf397816e49942d8c5e98df",
+          "new": "422b5f177b17e97493c421fec754db2165e9060b",
+          "files": [
+            {
+              "path": "frontend/app.js",
+              "status": "M",
+              "layer": "frontend"
+            }
+          ],
+          "layers": {
+            "frontend": [
+              "frontend/app.js"
+            ]
+          },
+          "config_changes": [],
+          "dependency_changes": [],
+          "changed_functions": {},
+          "endpoint_changes": [],
+          "contract_issues": [
+            {
+              "kind": "unknown_endpoint",
+              "call": "GET /api/product",
+              "file": "frontend/app.js"
+            }
+          ],
+          "stack": {
+            "backend": "fastapi",
+            "frontend": "plain html and js"
+          },
+          "map_errors": []
+        },
+        "old_sha": "33ddad2fc948ceb48cf397816e49942d8c5e98df",
+        "new_sha": "422b5f177b17e97493c421fec754db2165e9060b",
+        "messages": [
+          {
+            "from": "change_scan",
+            "to": "planner",
+            "kind": "info",
+            "text": "1 file(s) changed in: frontend (1). 1 contract issue(s), 0 endpoint change(s), 0 config change(s), 0 dependency change(s)."
+          }
+        ],
+        "trace": [
+          "change_scan: 1 file(s) changed: frontend (1), 1 contract issue(s)"
+        ]
+      },
+      "input": {
+        "repo": "D:\\STUDY\\FAAI\\Project\\DeploySure AI\\deploysure\\demo_apps\\tinyshop",
+        "old": "33ddad2fc948ceb48cf397816e49942d8c5e98df",
+        "new": "422b5f177b17e97493c421fec754db2165e9060b"
+      },
+      "ai": [],
+      "seconds": 1.3,
+      "messages_in": []
+    },
+    {
+      "node": "planner",
+      "timestamp": "2026-10-20T22:59:10.318",
+      "output": {
+        "focus": [
+          "api_contract"
+        ],
+        "focus_reason": "The change modifies the frontend, so testing the API contract is essential to ensure the page and backend still align.",
+        "messages": [
+          {
+            "from": "planner",
+            "to": "check_writing",
+            "kind": "focus",
+            "text": "Test these first: api_contract. The change modifies the frontend, so testing the API contract is essential to ensure the page and backend still align."
+          }
+        ],
+        "trace": [
+          "planner: focus api_contract"
+        ]
+      },
+      "input": {
+        "old": "33ddad2fc948ceb48cf397816e49942d8c5e98df",
+        "new": "422b5f177b17e97493c421fec754db2165e9060b",
+        "scan": {
+          "from": "change_scan"
+        }
+      },
+      "ai": [
+        {
+          "task": "planner",
+          "prompt": "You plan the safety check of a change to a web app, from 33ddad2fc948ceb48cf397816e49942d8c5e98df to 422b5f177b17e97493c421fec754db2165e9060b. Choose 1 to 4 focus areas to test first.\napi_contract: the routes and fields the page and backend share. page_behavior: what the page shows after clicks. data_values: numbers the API calculates. config_and_dependencies: settings and packages.\nchanged layers: frontend (1)\ncontract issues between page and API: 1\nendpoint changes: none\nchanged functions: none\nconfig or dependency changes: 0\nReply as JSON: {\"focus\": [\"api_contract\"], \"reason\": \"one sentence\"}",
+          "answer": {
+            "focus": [
+              "api_contract"
+            ],
+            "reason": "The change modifies the frontend, so testing the API contract is essential to ensure the page and backend still align."
+          },
+          "fallback": false,
+          "error": ""
+        }
+      ],
+      "seconds": 0.7,
+      "messages_in": [
+        {
+          "from": "change_scan",
+          "to": "planner",
+          "kind": "info",
+          "text": "1 file(s) changed in: frontend (1). 1 contract issue(s), 0 endpoint change(s), 0 config change(s), 0 dependency change(s)."
+        }
+      ]
+    },
+    {
+      "node": "check_writing",
+      "timestamp": "2026-10-20T22:59:13.527",
+      "output": {
+        "api_checks": [
+          {
+            "name": "Health endpoint reachable",
+            "method": "GET",
+            "path": "/api/health",
+            "json_body": null,
+            "expect_status": 200,
+            "expect_json": null,
+            "reason": "Ensures the service is up and health check returns OK"
+          },
+          {
+            "name": "Fetch product list",
+            "method": "GET",
+            "path": "/api/products",
+            "json_body": null,
+            "expect_status": 200,
+            "expect_json": null,
+            "reason": "Validates the correct products endpoint returns data"
+          },
+          {
+            "name": "Create order with single item quantity 1",
+            "method": "POST",
+            "path": "/api/orders",
+            "json_body": {
+              "product_id": 1,
+              "quantity": 1,
+              "items": []
+            },
+            "expect_status": 200,
+            "expect_json": null,
+            "reason": "Ensures order creation works for minimal quantity"
+          },
+          {
+            "name": "Create order with multiple items quantity >1",
+            "method": "POST",
+            "path": "/api/orders",
+            "json_body": {
+              "product_id": 2,
+              "quantity": 5,
+              "items": []
+            },
+            "expect_status": 200,
+            "expect_json": null,
+            "reason": "Checks handling of larger quantity values"
+          },
+          {
+            "name": "Create order with unknown product id",
+            "method": "POST",
+            "path": "/api/orders",
+            "json_body": {
+              "product_id": 9999,
+              "quantity": 1,
+              "items": []
+            },
+            "expect_status": 400,
+            "expect_json": null,
+            "reason": "Verifies proper error response for invalid product reference"
+          },
+          {
+            "name": "POST /api/orders (sample 1)",
+            "method": "POST",
+            "path": "/api/orders",
+            "json_body": {
+              "items": [
+                {
+                  "product_id": 1,
+                  "quantity": 1
+                }
+              ]
+            }
+          },
+          {
+            "name": "POST /api/orders (sample 2)",
+            "method": "POST",
+            "path": "/api/orders",
+            "json_body": {
+              "items": [
+                {
+                  "product_id": 2,
+                  "quantity": 2
+                }
+              ]
+            }
+          }
+        ],
+        "browser_checks": [
+          {
+            "name": "Verify product list loads",
+            "steps": [
+              {
+                "action": "goto",
+                "selector": null,
+                "value": "/"
+              },
+              {
+                "action": "read",
+                "selector": "#products",
+                "value": null
+              },
+              {
+                "action": "wait",
+                "selector": null,
+                "value": "500"
+              }
+            ],
+            "reason": "Ensure GET /api/product returns products and UI updates"
+          },
+          {
+            "name": "Add product to cart",
+            "steps": [
+              {
+                "action": "goto",
+                "selector": null,
+                "value": "/"
+              },
+              {
+                "action": "click",
+                "selector": ".add",
+                "value": null
+              },
+              {
+                "action": "wait",
+                "selector": null,
+                "value": "1000"
+              },
+              {
+                "action": "read",
+                "selector": "#cart",
+                "value": null
+              },
+              {
+                "action": "read",
+                "selector": "#total",
+                "value": null
+              }
+            ],
+            "reason": "Check that adding a product updates cart and total"
+          },
+          {
+            "name": "Place order error handling",
+            "steps": [
+              {
+                "action": "goto",
+                "selector": null,
+                "value": "/"
+              },
+              {
+                "action": "click",
+                "selector": ".add",
+                "value": null
+              },
+              {
+                "action": "click",
+                "selector": "#place-order",
+                "value": null
+              },
+              {
+                "action": "wait",
+                "selector": null,
+                "value": "1500"
+              },
+              {
+                "action": "read",
+                "selector": "#error",
+                "value": null
+              },
+              {
+                "action": "read",
+                "selector": "#result",
+                "value": null
+              }
+            ],
+            "reason": "Validate error display when POST /api/orders fails after product load"
+          },
+          {
+            "name": "Open the page and press the first button",
+            "reason": "a generic smoke check",
+            "steps": [
+              {
+                "action": "goto",
+                "value": "/"
+              },
+              {
+                "action": "wait",
+                "value": "800"
+              },
+              {
+                "action": "read",
+                "selector": "body"
+              },
+              {
+                "action": "click",
+                "selector": "button"
+              },
+              {
+                "action": "wait",
+                "value": "300"
+              },
+              {
+                "action": "read",
+                "selector": "body"
+              }
+            ]
+          }
+        ],
+        "check_sources": {
+          "api": "ai+probes",
+          "browser": "ai+smoke"
+        },
+        "check_round": 1,
+        "messages": [
+          {
+            "from": "check_writing",
+            "to": "differential_run",
+            "kind": "info",
+            "text": "7 API check(s) from ai+probes and 4 scenario(s) from ai+smoke."
+          }
+        ],
+        "trace": [
+          "check_writing: 7 API check(s) from ai+probes, 4 browser scenario(s) from ai+smoke"
+        ]
+      },
+      "input": {
+        "old": "33ddad2fc948ceb48cf397816e49942d8c5e98df",
+        "new": "422b5f177b17e97493c421fec754db2165e9060b",
+        "scan": {
+          "from": "change_scan"
+        },
+        "focus": {
+          "from": "planner"
+        }
+      },
+      "ai": [
+        {
+          "task": "api_checks",
+          "prompt": "You test a web app after a code change. Propose up to 6 HTTP checks against the running app that would reveal a regression.\nUse only the endpoints listed. Vary the inputs: quantities of 1 and more than 1, different ids, empty lists, unknown ids.\nPaths must be concrete (use 1, not {id}). Do not guess expected numbers: leave expect_json out unless the code makes the value certain.\nReply as JSON: {\"checks\": [{\"name\": \"...\", \"method\": \"GET|POST|PUT|PATCH|DELETE\", \"path\": \"/...\", \"json_body\": {...}, \"expect_status\": 200, \"reason\": \"...\"}]}\nPRIORITY (from the Planner):\n- api_contract: the routes and fields the page and the backend share\nENDPOINTS\nGET /api/health  takes: -  returns: status\nGET /api/products  takes: -  returns: id, name, price\nPOST /api/orders  takes: items, product_id, quantity  returns: currency, id, total\nGET /api/orders/{order_id}  takes: -  returns: -\nCHANGE\n- frontend: frontend/app.js\nproblems between page and API:\n- unknown_endpoint: call=GET /api/product, file=frontend/app.js\nDIFF\ndiff --git a/frontend/app.js b/frontend/app.js\nindex bfb1d75..d679530 100644\n--- a/frontend/app.js\n+++ b/frontend/app.js\n@@ -22,5 +22,5 @@ function render() {\n async function loadProducts() {\n   try {\n-    const res = await fetch(\"/api/products\");\n+    const res = await fetch(\"/api/product\");\n     if (!res.ok) throw new Error(\"status \" + res.status);\n     products = await res.json();\n",
+          "answer": {
+            "checks": [
+              {
+                "name": "Health endpoint reachable",
+                "method": "GET",
+                "path": "/api/health",
+                "json_body": null,
+                "expect_status": 200,
+                "expect_json": null,
+                "reason": "Ensures the service is up and health check returns OK"
+              },
+              {
+                "name": "Fetch product list",
+                "method": "GET",
+                "path": "/api/products",
+                "json_body": null,
+                "expect_status": 200,
+                "expect_json": null,
+                "reason": "Validates the correct products endpoint returns data"
+              },
+              {
+                "name": "Incorrect products endpoint returns 404",
+                "method": "GET",
+                "path": "/api/product",
+                "json_body": null,
+                "expect_status": 404,
+                "expect_json": null,
+                "reason": "Detects regression where frontend calls wrong endpoint"
+              },
+              {
+                "name": "Create order with single item quantity 1",
+                "method": "POST",
+                "path": "/api/orders",
+                "json_body": {
+                  "product_id": 1,
+                  "quantity": 1,
+                  "items": []
+                },
+                "expect_status": 200,
+                "expect_json": null,
+                "reason": "Ensures order creation works for minimal quantity"
+              },
+              {
+                "name": "Create order with multiple items quantity >1",
+                "method": "POST",
+                "path": "/api/orders",
+                "json_body": {
+                  "product_id": 2,
+                  "quantity": 5,
+                  "items": []
+                },
+                "expect_status": 200,
+                "expect_json": null,
+                "reason": "Checks handling of larger quantity values"
+              },
+              {
+                "name": "Create order with unknown product id",
+                "method": "POST",
+                "path": "/api/orders",
+                "json_body": {
+                  "product_id": 9999,
+                  "quantity": 1,
+                  "items": []
+                },
+                "expect_status": 400,
+                "expect_json": null,
+                "reason": "Verifies proper error response for invalid product reference"
+              }
+            ]
+          },
+          "fallback": false,
+          "error": ""
+        },
+        {
+          "task": "browser_checks",
+          "prompt": "You test a web page after a code change. Propose up to 3 browser scenarios of at most 10 steps each.\nSteps: goto (value is a path such as /), click (selector), fill (selector and value), read (selector: records the texts of the matching elements), wait (value in milliseconds, at most 2000).\nRead the elements the change may affect, and wait after a click that calls the API. Use only the selectors listed.\nReply as JSON: {\"checks\": [{\"name\": \"...\", \"reason\": \"...\", \"steps\": [{\"action\": \"goto\", \"value\": \"/\"}, {\"action\": \"click\", \"selector\": \"#id\"}]}]}\nPRIORITY (from the Planner):\n- api_contract: the routes and fields the page and the backend share\nSELECTORS\n#cart, #error, #place-order, #products, #result, #total, .add\nPAGE CALLS\nGET /api/product\nPOST /api/orders\nCHANGE\n- frontend: frontend/app.js\nproblems between page and API:\n- unknown_endpoint: call=GET /api/product, file=frontend/app.js\nDIFF\ndiff --git a/frontend/app.js b/frontend/app.js\nindex bfb1d75..d679530 100644\n--- a/frontend/app.js\n+++ b/frontend/app.js\n@@ -22,5 +22,5 @@ function render() {\n async function loadProducts() {\n   try {\n-    const res = await fetch(\"/api/products\");\n+    const res = await fetch(\"/api/product\");\n     if (!res.ok) throw new Error(\"status \" + res.status);\n     products = await res.json();\n",
+          "answer": {
+            "checks": [
+              {
+                "name": "Verify product list loads",
+                "steps": [
+                  {
+                    "action": "goto",
+                    "selector": null,
+                    "value": "/"
+                  },
+                  {
+                    "action": "read",
+                    "selector": "#products",
+                    "value": null
+                  },
+                  {
+                    "action": "wait",
+                    "selector": null,
+                    "value": "500"
+                  }
+                ],
+                "reason": "Ensure GET /api/product returns products and UI updates"
+              },
+              {
+                "name": "Add product to cart",
+                "steps": [
+                  {
+                    "action": "goto",
+                    "selector": null,
+                    "value": "/"
+                  },
+                  {
+                    "action": "click",
+                    "selector": ".add",
+                    "value": null
+                  },
+                  {
+                    "action": "wait",
+                    "selector": null,
+                    "value": "1000"
+                  },
+                  {
+                    "action": "read",
+                    "selector": "#cart",
+                    "value": null
+                  },
+                  {
+                    "action": "read",
+                    "selector": "#total",
+                    "value": null
+                  }
+                ],
+                "reason": "Check that adding a product updates cart and total"
+              },
+              {
+                "name": "Place order error handling",
+                "steps": [
+                  {
+                    "action": "goto",
+                    "selector": null,
+                    "value": "/"
+                  },
+                  {
+                    "action": "click",
+                    "selector": ".add",
+                    "value": null
+                  },
+                  {
+                    "action": "click",
+                    "selector": "#place-order",
+                    "value": null
+                  },
+                  {
+                    "action": "wait",
+                    "selector": null,
+                    "value": "1500"
+                  },
+                  {
+                    "action": "read",
+                    "selector": "#error",
+                    "value": null
+                  },
+                  {
+                    "action": "read",
+                    "selector": "#result",
+                    "value": null
+                  }
+                ],
+                "reason": "Validate error display when POST /api/orders fails after product load"
+              }
+            ]
+          },
+          "fallback": false,
+          "error": ""
+        }
+      ],
+      "seconds": 3.2,
+      "messages_in": [
+        {
+          "from": "planner",
+          "to": "check_writing",
+          "kind": "focus",
+          "text": "Test these first: api_contract. The change modifies the frontend, so testing the API contract is essential to ensure the page and backend still align."
+        }
+      ]
+    },
+    {
+      "node": "differential_run",
+      "timestamp": "2026-10-20T22:59:37.764",
+      "output": {
+        "api_report": {
+          "results": [
+            {
+              "name": "Health endpoint reachable",
+              "method": "GET",
+              "path": "/api/health",
+              "reason": "Ensures the service is up and health check returns OK",
+              "verdict": "unchanged",
+              "differences": [],
+              "assertion": {
+                "old": true,
+                "new": true
+              },
+              "old_status": 200,
+              "new_status": 200
+            },
+            {
+              "name": "Fetch product list",
+              "method": "GET",
+              "path": "/api/products",
+              "reason": "Validates the correct products endpoint returns data",
+              "verdict": "unchanged",
+              "differences": [],
+              "assertion": {
+                "old": true,
+                "new": true
+              },
+              "old_status": 200,
+              "new_status": 200
+            },
+            {
+              "name": "Create order with single item quantity 1",
+              "method": "POST",
+              "path": "/api/orders",
+              "reason": "Ensures order creation works for minimal quantity",
+              "verdict": "unchanged",
+              "differences": [],
+              "assertion": {
+                "old": false,
+                "new": false
+              },
+              "old_status": 400,
+              "new_status": 400
+            },
+            {
+              "name": "Create order with multiple items quantity >1",
+              "method": "POST",
+              "path": "/api/orders",
+              "reason": "Checks handling of larger quantity values",
+              "verdict": "unchanged",
+              "differences": [],
+              "assertion": {
+                "old": false,
+                "new": false
+              },
+              "old_status": 400,
+              "new_status": 400
+            },
+            {
+              "name": "Create order with unknown product id",
+              "method": "POST",
+              "path": "/api/orders",
+              "reason": "Verifies proper error response for invalid product reference",
+              "verdict": "unchanged",
+              "differences": [],
+              "assertion": {
+                "old": true,
+                "new": true
+              },
+              "old_status": 400,
+              "new_status": 400
+            },
+            {
+              "name": "POST /api/orders (sample 1)",
+              "method": "POST",
+              "path": "/api/orders",
+              "reason": "",
+              "verdict": "unchanged",
+              "differences": [],
+              "assertion": {
+                "old": null,
+                "new": null
+              },
+              "old_status": 200,
+              "new_status": 200
+            },
+            {
+              "name": "POST /api/orders (sample 2)",
+              "method": "POST",
+              "path": "/api/orders",
+              "reason": "",
+              "verdict": "unchanged",
+              "differences": [],
+              "assertion": {
+                "old": null,
+                "new": null
+              },
+              "old_status": 200,
+              "new_status": 200
+            }
+          ],
+          "summary": {
+            "unchanged": 7,
+            "benign_change": 0,
+            "regression": 0,
+            "unreliable": 0,
+            "regressions": []
+          }
+        },
+        "browser_report": {
+          "results": [
+            {
+              "name": "Verify product list loads",
+              "reason": "Ensure GET /api/product returns products and UI updates",
+              "verdict": "regression",
+              "differences": [
+                {
+                  "kind": "new_failed_request",
+                  "request": "GET /api/product 404"
+                },
+                {
+                  "kind": "request_missing",
+                  "request": "GET /api/products 200"
+                },
+                {
+                  "kind": "text_changed",
+                  "field": "2:#products",
+                  "old": [
+                    "Notebook $4.50 Add to cart Pen $1.25 Add to cart Backpack $32.00 Add to cart"
+                  ],
+                  "new": [
+                    ""
+                  ]
+                }
+              ],
+              "old": {
+                "requests": [
+                  "GET /api/products 200"
+                ],
+                "step_error": null
+              },
+              "new": {
+                "requests": [
+                  "GET /api/product 404"
+                ],
+                "step_error": null
+              }
+            },
+            {
+              "name": "Add product to cart",
+              "reason": "Check that adding a product updates cart and total",
+              "verdict": "regression",
+              "differences": [
+                {
+                  "kind": "step_failed",
+                  "detail": "step 2 (click .add): TimeoutError"
+                },
+                {
+                  "kind": "new_failed_request",
+                  "request": "GET /api/product 404"
+                },
+                {
+                  "kind": "request_missing",
+                  "request": "GET /api/products 200"
+                }
+              ],
+              "old": {
+                "requests": [
+                  "GET /api/products 200"
+                ],
+                "step_error": null
+              },
+              "new": {
+                "requests": [
+                  "GET /api/product 404"
+                ],
+                "step_error": "step 2 (click .add): TimeoutError"
+              }
+            },
+            {
+              "name": "Place order error handling",
+              "reason": "Validate error display when POST /api/orders fails after product load",
+              "verdict": "regression",
+              "differences": [
+                {
+                  "kind": "step_failed",
+                  "detail": "step 2 (click .add): TimeoutError"
+                },
+                {
+                  "kind": "new_failed_request",
+                  "request": "GET /api/product 404"
+                },
+                {
+                  "kind": "request_missing",
+                  "request": "GET /api/products 200"
+                },
+                {
+                  "kind": "request_missing",
+                  "request": "POST /api/orders 200"
+                }
+              ],
+              "old": {
+                "requests": [
+                  "GET /api/products 200",
+                  "POST /api/orders 200"
+                ],
+                "step_error": null
+              },
+              "new": {
+                "requests": [
+                  "GET /api/product 404"
+                ],
+                "step_error": "step 2 (click .add): TimeoutError"
+              }
+            },
+            {
+              "name": "Open the page and press the first button",
+              "reason": "a generic smoke check",
+              "verdict": "regression",
+              "differences": [
+                {
+                  "kind": "step_failed",
+                  "detail": "step 4 (click button): TimeoutError"
+                },
+                {
+                  "kind": "new_failed_request",
+                  "request": "GET /api/product 404"
+                },
+                {
+                  "kind": "request_missing",
+                  "request": "GET /api/products 200"
+                },
+                {
+                  "kind": "text_changed",
+                  "field": "3:body",
+                  "old": [
+                    "TinyShop Notebook $4.50 Add to cart Pen $1.25 Add to cart Backpack $32.00 Add to cart Your cart Total: $0.00 Place order"
+                  ],
+                  "new": [
+                    "TinyShop Could not load products Your cart Total: $0.00 Place order"
+                  ]
+                }
+              ],
+              "old": {
+                "requests": [
+                  "GET /api/products 200"
+                ],
+                "step_error": null
+              },
+              "new": {
+                "requests": [
+                  "GET /api/product 404"
+                ],
+                "step_error": "step 4 (click button): TimeoutError"
+              }
+            }
+          ],
+          "summary": {
+            "unchanged": 0,
+            "ui_changed": 0,
+            "regression": 4,
+            "unreliable": 0,
+            "regressions": [
+              "Verify product list loads",
+              "Add product to cart",
+              "Place order error handling",
+              "Open the page and press the first button"
+            ]
+          }
+        },
+        "start_error": "",
+        "browser_error": "",
+        "messages": [
+          {
+            "from": "differential_run",
+            "to": "layer_attribution",
+            "kind": "info",
+            "text": "0 API regression(s), 4 page regression(s), 0 unreliable check(s)."
+          }
+        ],
+        "trace": [
+          "differential_run: API 0 regression(s) of 7, browser 4 regression(s) of 4"
+        ]
+      },
+      "input": {
+        "old": "33ddad2fc948ceb48cf397816e49942d8c5e98df",
+        "new": "422b5f177b17e97493c421fec754db2165e9060b",
+        "api_checks": {
+          "from": "check_writing"
+        },
+        "browser_checks": {
+          "from": "check_writing"
+        }
+      },
+      "ai": [],
+      "seconds": 24.2,
+      "messages_in": [
+        {
+          "from": "check_writing",
+          "to": "differential_run",
+          "kind": "info",
+          "text": "7 API check(s) from ai+probes and 4 scenario(s) from ai+smoke."
+        }
+      ]
+    },
+    {
+      "node": "layer_attribution",
+      "timestamp": "2026-10-20T22:59:37.765",
+      "output": {
+        "layer_verdict": {
+          "layers": [
+            "frontend"
+          ],
+          "primary": "frontend",
+          "confidence": "high",
+          "reasons": [
+            "frontend/app.js calls GET /api/product, which the backend does not serve."
+          ],
+          "evidence": {
+            "static": 1,
+            "api": 0,
+            "browser": 4
+          }
+        },
+        "messages": [
+          {
+            "from": "layer_attribution",
+            "to": "decision",
+            "kind": "info",
+            "text": "The fault is in: frontend (high confidence). frontend/app.js calls GET /api/product, which the backend does not serve."
+          }
+        ],
+        "trace": [
+          "layer_attribution: frontend (high confidence)"
+        ]
+      },
+      "input": {
+        "scan": {
+          "from": "change_scan"
+        },
+        "api_report": {
+          "from": "differential_run"
+        },
+        "browser_report": {
+          "from": "differential_run"
+        },
+        "start_error": {
+          "from": "differential_run"
+        },
+        "browser_error": {
+          "from": "differential_run"
+        }
+      },
+      "ai": [],
+      "seconds": 0.0,
+      "messages_in": [
+        {
+          "from": "differential_run",
+          "to": "layer_attribution",
+          "kind": "info",
+          "text": "0 API regression(s), 4 page regression(s), 0 unreliable check(s)."
+        }
+      ]
+    },
+    {
+      "node": "risk_assessment",
+      "timestamp": "2026-10-20T22:59:37.766",
+      "output": {
+        "risk_score": 73,
+        "risk_level": "HIGH",
+        "risk_components": {
+          "change_impact": 3,
+          "contract_break": 30,
+          "api_regression": 0,
+          "ui_regression": 40,
+          "not_verified": 0
+        },
+        "messages": [
+          {
+            "from": "risk_assessment",
+            "to": "decision",
+            "kind": "info",
+            "text": "Risk 73 (HIGH). Biggest parts: ui_regression 40, contract_break 30."
+          }
+        ],
+        "trace": [
+          "risk_assessment: score 73 (HIGH), components {'change_impact': 3, 'contract_break': 30, 'api_regression': 0, 'ui_regression': 40, 'not_verified': 0}"
+        ]
+      },
+      "input": {
+        "scan": {
+          "from": "change_scan"
+        },
+        "api_report": {
+          "from": "differential_run"
+        },
+        "browser_report": {
+          "from": "differential_run"
+        },
+        "start_error": {
+          "from": "differential_run"
+        },
+        "browser_error": {
+          "from": "differential_run"
+        }
+      },
+      "ai": [],
+      "seconds": 0.0,
+      "messages_in": []
+    },
+    {
+      "node": "decision",
+      "timestamp": "2026-10-20T22:59:38.489",
+      "output": {
+        "decision": "BLOCK",
+        "decision_reason": "Frontend calls an API endpoint that the backend does not serve, causing a contract break",
+        "messages": [
+          {
+            "from": "decision",
+            "to": "critic",
+            "kind": "info",
+            "text": "I recommend BLOCK: Frontend calls an API endpoint that the backend does not serve, causing a contract break"
+          }
+        ],
+        "trace": [
+          "decision: BLOCK"
+        ]
+      },
+      "input": {
+        "scan": {
+          "from": "change_scan"
+        },
+        "layer_verdict": {
+          "from": "layer_attribution"
+        },
+        "risk_score": {
+          "from": "risk_assessment"
+        },
+        "risk_level": {
+          "from": "risk_assessment"
+        },
+        "feedback": ""
+      },
+      "ai": [
+        {
+          "task": "decision",
+          "prompt": "You decide whether a change to a web app can go live. Answer DEPLOY, HOLD or BLOCK.\nPolicy: a broken page, a page and API that no longer agree, or an app that does not start mean BLOCK. A changed value or checks that could not run mean HOLD at least. DEPLOY only if nothing regressed and risk is LOW.\nEVIDENCE\nchanged_layers: frontend\nrisk_score: 73\nrisk_level: HIGH\nbreaking_findings: 5\nbehavior_changes: 0\nchecks_incomplete: no\nfaulty_layer: frontend (high confidence)\n- frontend/app.js calls GET /api/product, which the backend does not serve.\nCritic feedback from the previous attempt: none\nNotes from the other agents:\n- layer_attribution: The fault is in: frontend (high confidence). frontend/app.js calls GET /api/product, which the backend does not serve.\n- risk_assessment: Risk 73 (HIGH). Biggest parts: ui_regression 40, contract_break 30.\nReply as JSON: {\"decision\": \"DEPLOY|HOLD|BLOCK\", \"reason\": \"one sentence\"}",
+          "answer": {
+            "decision": "BLOCK",
+            "reason": "Frontend calls an API endpoint that the backend does not serve, causing a contract break"
+          },
+          "fallback": false,
+          "error": ""
+        }
+      ],
+      "seconds": 0.7,
+      "messages_in": [
+        {
+          "from": "layer_attribution",
+          "to": "decision",
+          "kind": "info",
+          "text": "The fault is in: frontend (high confidence). frontend/app.js calls GET /api/product, which the backend does not serve."
+        },
+        {
+          "from": "risk_assessment",
+          "to": "decision",
+          "kind": "info",
+          "text": "Risk 73 (HIGH). Biggest parts: ui_regression 40, contract_break 30."
+        }
+      ]
+    },
+    {
+      "node": "critic",
+      "timestamp": "2026-10-20T22:59:39.329",
+      "output": {
+        "critic_result": "PASS",
+        "critic_reason": "Decision BLOCK is consistent with the rules (the page and the API no longer agree (1 issue(s)); the page behaves differently in a way that looks broken). The decision satisfies the rules because the identified discrepancies and broken behavior trigger the required block condition.",
+        "critic_rules": [
+          "the page and the API no longer agree (1 issue(s))",
+          "the page behaves differently in a way that looks broken"
+        ],
+        "feedback": "",
+        "messages": [],
+        "trace": [
+          "critic: PASS, decision BLOCK vs required at least BLOCK"
+        ]
+      },
+      "input": {
+        "decision": {
+          "from": "decision"
+        },
+        "scan": {
+          "from": "change_scan"
+        },
+        "api_report": {
+          "from": "differential_run"
+        },
+        "browser_report": {
+          "from": "differential_run"
+        },
+        "start_error": {
+          "from": "differential_run"
+        },
+        "browser_error": {
+          "from": "differential_run"
+        }
+      },
+      "ai": [
+        {
+          "task": "critic",
+          "prompt": "A rule engine already reviewed a release decision. The result is final, do not question it. Write one sentence saying why the decision satisfies the rules. Reply as JSON: {\"reason\": \"...\"}.\ndecision: BLOCK\nrequired_at_least: BLOCK\nrules_fired: ['the page and the API no longer agree (1 issue(s))', 'the page behaves differently in a way that looks broken']\nresult: PASS",
+          "answer": {
+            "reason": "The decision satisfies the rules because the identified discrepancies and broken behavior trigger the required block condition."
+          },
+          "fallback": false,
+          "error": ""
+        }
+      ],
+      "seconds": 0.8,
+      "messages_in": [
+        {
+          "from": "decision",
+          "to": "critic",
+          "kind": "info",
+          "text": "I recommend BLOCK: Frontend calls an API endpoint that the backend does not serve, causing a contract break"
+        }
+      ]
+    }
+  ]
+}

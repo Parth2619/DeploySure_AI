@@ -1,0 +1,372 @@
+{
+  "repo": "C:\\Users\\pradi\\OneDrive\\Documents\\GitHub\\priceright-demo",
+  "old": "e9dbd31047d5bbf7f6ab44cd7168d0e5aaf82f0c",
+  "new": "922d3d1f67e64d187912528ec257faa90a35bc05",
+  "old_sha": "e9dbd31047d5bbf7f6ab44cd7168d0e5aaf82f0c",
+  "new_sha": "922d3d1f67e64d187912528ec257faa90a35bc05",
+  "layers_changed": {
+    "backend": [
+      "backend/pricing.py"
+    ]
+  },
+  "contract_issues": [],
+  "endpoint_changes": [],
+  "config_changes": [],
+  "dependency_changes": [],
+  "check_sources": {
+    "api": "ai+probes",
+    "browser": "ai+smoke"
+  },
+  "api_summary": {
+    "unchanged": 4,
+    "benign_change": 0,
+    "regression": 4,
+    "unreliable": 0,
+    "regressions": [
+      "Quote typical discount",
+      "Quote max discount",
+      "POST /api/quote (sample 1)",
+      "POST /api/quote (sample 2)"
+    ]
+  },
+  "browser_summary": {
+    "unchanged": 0,
+    "ui_changed": 0,
+    "regression": 1,
+    "unreliable": 3,
+    "regressions": [
+      "Open the page and press the first button"
+    ]
+  },
+  "api_results": [
+    {
+      "name": "Health check",
+      "method": "GET",
+      "path": "/api/health",
+      "reason": "Verify service is up",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Quote no discount",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Baseline price with 0% discount",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "Quote typical discount",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Detect regression where 10% becomes 90% off",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "status_changed",
+          "old": 200,
+          "new": 500
+        },
+        {
+          "kind": "field_added",
+          "field": "detail"
+        },
+        {
+          "kind": "field_removed",
+          "field": "discount_percent"
+        },
+        {
+          "kind": "field_removed",
+          "field": "final_price"
+        },
+        {
+          "kind": "field_removed",
+          "field": "original_price"
+        },
+        {
+          "kind": "field_removed",
+          "field": "savings"
+        }
+      ],
+      "assertion": {
+        "old": true,
+        "new": false
+      },
+      "old_status": 200,
+      "new_status": 500
+    },
+    {
+      "name": "Quote max discount",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Ensure 100% discount yields zero final price",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "status_changed",
+          "old": 200,
+          "new": 500
+        },
+        {
+          "kind": "field_added",
+          "field": "detail"
+        },
+        {
+          "kind": "field_removed",
+          "field": "discount_percent"
+        },
+        {
+          "kind": "field_removed",
+          "field": "final_price"
+        },
+        {
+          "kind": "field_removed",
+          "field": "original_price"
+        },
+        {
+          "kind": "field_removed",
+          "field": "savings"
+        }
+      ],
+      "assertion": {
+        "old": true,
+        "new": false
+      },
+      "old_status": 200,
+      "new_status": 500
+    },
+    {
+      "name": "Quote negative discount",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Validate input validation for negative discount",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 400,
+      "new_status": 400
+    },
+    {
+      "name": "Quote over max discount",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "Validate input validation for discount >100",
+      "verdict": "unchanged",
+      "differences": [],
+      "assertion": {
+        "old": true,
+        "new": true
+      },
+      "old_status": 400,
+      "new_status": 400
+    },
+    {
+      "name": "POST /api/quote (sample 1)",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "value_changed",
+          "field": "final_price",
+          "old": 0.99,
+          "new": 0.0
+        },
+        {
+          "kind": "value_changed",
+          "field": "savings",
+          "old": 0.01,
+          "new": 1.0
+        }
+      ],
+      "assertion": {
+        "old": null,
+        "new": null
+      },
+      "old_status": 200,
+      "new_status": 200
+    },
+    {
+      "name": "POST /api/quote (sample 2)",
+      "method": "POST",
+      "path": "/api/quote",
+      "reason": "",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "status_changed",
+          "old": 200,
+          "new": 500
+        },
+        {
+          "kind": "field_added",
+          "field": "detail"
+        },
+        {
+          "kind": "field_removed",
+          "field": "discount_percent"
+        },
+        {
+          "kind": "field_removed",
+          "field": "final_price"
+        },
+        {
+          "kind": "field_removed",
+          "field": "original_price"
+        },
+        {
+          "kind": "field_removed",
+          "field": "savings"
+        }
+      ],
+      "assertion": {
+        "old": null,
+        "new": null
+      },
+      "old_status": 200,
+      "new_status": 500
+    }
+  ],
+  "browser_results": [
+    {
+      "name": "Verify discount applied",
+      "reason": "Ensure discount element updates after quoting",
+      "verdict": "unreliable",
+      "differences": [],
+      "old": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      },
+      "new": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      }
+    },
+    {
+      "name": "Check error handling on invalid input",
+      "reason": "Validate error message appears for bad quote",
+      "verdict": "unreliable",
+      "differences": [],
+      "old": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      },
+      "new": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      }
+    },
+    {
+      "name": "Confirm result display after successful quote",
+      "reason": "Verify result element shows correct price",
+      "verdict": "unreliable",
+      "differences": [],
+      "old": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      },
+      "new": {
+        "requests": [],
+        "step_error": "step 2 (fill #quote): Error"
+      }
+    },
+    {
+      "name": "Open the page and press the first button",
+      "reason": "a generic smoke check",
+      "verdict": "regression",
+      "differences": [
+        {
+          "kind": "new_failed_request",
+          "request": "POST /api/quote 500"
+        },
+        {
+          "kind": "request_missing",
+          "request": "POST /api/quote 200"
+        },
+        {
+          "kind": "text_changed",
+          "field": "6:body",
+          "old": [
+            "PriceRight Work out the price after a discount. Price Discount (%) Calculate price Final price $180.00 (was $200.00, 10% off)"
+          ],
+          "new": [
+            "PriceRight Work out the price after a discount. Price Discount (%) Calculate price Could not calculate the price"
+          ]
+        }
+      ],
+      "old": {
+        "requests": [
+          "POST /api/quote 200"
+        ],
+        "step_error": null
+      },
+      "new": {
+        "requests": [
+          "POST /api/quote 500"
+        ],
+        "step_error": null
+      }
+    }
+  ],
+  "start_error": "",
+  "browser_error": "",
+  "layer_verdict": {
+    "layers": [
+      "backend"
+    ],
+    "primary": "backend",
+    "confidence": "high",
+    "reasons": [
+      "API check 'Quote typical discount' gives a different answer: status changed from 200 to 500; field detail was added.",
+      "API check 'Quote max discount' gives a different answer: status changed from 200 to 500; field detail was added.",
+      "API check 'POST /api/quote (sample 1)' gives a different answer: final_price changed from 0.99 to 0.0; savings changed from 0.01 to 1.0.",
+      "API check 'POST /api/quote (sample 2)' gives a different answer: status changed from 200 to 500; field detail was added.",
+      "Browser check 'Open the page and press the first button' breaks because of the backend change: request POST /api/quote 500 failed; request POST /api/quote 200 is no longer made."
+    ],
+    "evidence": {
+      "static": 0,
+      "api": 4,
+      "browser": 1
+    }
+  },
+  "risk_score": 83,
+  "risk_level": "CRITICAL",
+  "risk_components": {
+    "change_impact": 3,
+    "contract_break": 0,
+    "api_regression": 40,
+    "ui_regression": 40,
+    "not_verified": 0
+  },
+  "decision": "BLOCK",
+  "decision_reason": "API checks now return 500 errors and response data mismatches, indicating broken functionality",
+  "critic_result": "PASS",
+  "critic_reason": "Decision BLOCK is consistent with the rules (the page behaves differently in a way that looks broken; an API answer lost a field, changed its status or failed; risk level CRITICAL). The decision meets the required BLOCK level and addresses all fired rules, including the critical risk, thereby satisfying the rule engine's criteria.",
+  "retry_count": 0,
+  "trace": [
+    "planner: planned 5 tasks",
+    "change_scan: 1 file(s) changed: backend (1)",
+    "check_writing: 8 API check(s) from ai+probes, 4 browser scenario(s) from ai+smoke",
+    "differential_run: API 4 regression(s) of 8, browser 1 regression(s) of 4",
+    "layer_attribution: backend (high confidence)",
+    "risk_assessment: score 83 (CRITICAL), components {'change_impact': 3, 'contract_break': 0, 'api_regression': 40, 'ui_regression': 40, 'not_verified': 0}",
+    "decision: BLOCK",
+    "critic: PASS, decision BLOCK vs required at least BLOCK"
+  ]
+}

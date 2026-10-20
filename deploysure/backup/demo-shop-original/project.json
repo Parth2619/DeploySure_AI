@@ -1,0 +1,8 @@
+{
+  "id": "demo-shop",
+  "name": "Demo shop",
+  "created": "2026-10-01T00:00:00",
+  "critical_modules": ["payment", "checkout", "refund"],
+  "locked_test_files": ["test_payment.py", "test_refund.py"],
+  "customer_facing": {"payment": 10, "checkout": 10, "refund": 10, "orders": 8, "notification": 8, "auth": 6}
+}
