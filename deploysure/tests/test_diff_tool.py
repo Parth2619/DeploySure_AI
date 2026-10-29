@@ -1,3 +1,5 @@
+import pytest
+
 from deploysure.tools.code_reader import release_path
 from deploysure.tools.diff_tool import changed_functions, diff_releases, lines_changed
 
@@ -57,3 +59,29 @@ def test_v22_changes_only_payment_refund_amount():
 
 def test_identical_releases_have_no_changes():
     assert diff_releases(release_path("v2.0"), release_path("v2.0"))["changed_files"] == []
+
+
+def test_test_files_are_not_code_changes(tmp_path):
+    old, new = tmp_path / "old", tmp_path / "new"
+    for folder, text in ((old, "x = 1\n"), (new, "x = 2\n")):
+        folder.mkdir()
+        (folder / "app.py").write_text("y = 1\n")
+        (folder / "test_a.py").write_text(text)
+        (folder / "conftest.py").write_text(text)
+    assert diff_releases(old, new)["changed_files"] == []
+
+
+def test_load_release_reads_version_json():
+    from deploysure.tools.code_reader import load_release
+    assert load_release("v2.2")["baseline"] == "v2.0"
+    assert load_release("v2.0")["baseline"] is None
+
+
+def test_syntax_error_message_names_the_file(tmp_path):
+    old, new = tmp_path / "old", tmp_path / "new"
+    for folder, code in ((old, "x = 1\n"), (new, "def f(:\n")):
+        folder.mkdir()
+        (folder / "bad.py").write_text(code)
+    with pytest.raises(SyntaxError) as err:
+        diff_releases(old, new)
+    assert "bad.py" in str(err.value)

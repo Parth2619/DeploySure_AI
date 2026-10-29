@@ -1,0 +1,14 @@
+[Unit]
+Description=DeploySure AI
+After=network.target
+
+[Service]
+User=__USER__
+WorkingDirectory=__PARENT_DIR__
+EnvironmentFile=/etc/deploysure.env
+# Local only: nginx is the public door, and the app refuses any host name except localhost.
+ExecStart=__APP_DIR__/.venv/bin/python -m uvicorn deploysure.server:app --host 127.0.0.1 --port 8000
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

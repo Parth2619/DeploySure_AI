@@ -1,0 +1,16 @@
+﻿[planner          ] done  planner: planned 7 tasks (AI not used, used the fixed plan. Reason: RuntimeError: GROQ_API_KEY is not set)
+[change_scan      ] done  change_scan: 2 file(s) changed: config (1), backend (1)
+[check_writing    ] done  check_writing: 4 API check(s) from probes (AI not used, probing endpoints with sample bodies. Reason: RuntimeError: GROQ_API_KEY is not set), 1 browse
+[differential_run ] done  differential_run: API 0 regression(s) of 4, browser 0 regression(s) of 1
+[layer_attribution] done  layer_attribution: none (high confidence)
+[risk_assessment  ] done  risk_assessment: score 8 (LOW), components {'change_impact': 8, 'contract_break': 0, 'api_regression': 0, 'ui_regression': 0, 'not_verified': 0}
+[decision         ] done  decision: DEPLOY (AI not used, used the policy rules. Reason: RuntimeError: GROQ_API_KEY is not set)
+[critic           ] done  critic: PASS, decision DEPLOY vs required at least DEPLOY (AI not used, rule summary only. Reason: RuntimeError: GROQ_API_KEY is not set)
+
+v1.1 -> v1.2: DEPLOY
+  reason:        The model was not available; applied the policy rules directly.
+  faulty layer:  none (high confidence)
+                 - No regression was found.
+  risk:          8 (LOW)
+  API checks:    0 regression(s)    browser: 0 regression(s)
+  critic:        PASS after 0 retry(ies)

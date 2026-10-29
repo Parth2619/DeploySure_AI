@@ -1,18 +1,20 @@
-"""Run a release from the terminal: python -m deploysure.cli v2.2 [--json]"""
+"""Run a version from the terminal: python -m deploysure.cli v2.2 [project_id] [--json]"""
 import json
 import sys
 
 from deploysure.api import stream_release_validation
+from deploysure.tools.code_reader import DEFAULT_PROJECT
 
 
 def main(argv: list[str]) -> int:
     args = [a for a in argv if not a.startswith("--")]
-    if len(args) != 1:
-        print("usage: python -m deploysure.cli <release_id> [--json]")
+    if len(args) not in (1, 2):
+        print("usage: python -m deploysure.cli <version> [project_id] [--json]")
         return 2
     as_json = "--json" in argv
+    project = args[1] if len(args) == 2 else DEFAULT_PROJECT
     try:
-        for event in stream_release_validation(args[0]):
+        for event in stream_release_validation(args[0], project):
             if event["node"] == "final":
                 report = event["final_report"]
                 print(json.dumps(report, indent=2) if as_json else _summary(report))

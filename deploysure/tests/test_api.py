@@ -2,15 +2,14 @@ import json
 
 import pytest
 
-from deploysure.api import REPORT_KEYS, check_release, list_releases, run_release_validation, stream_release_validation
+from deploysure.api import REPORT_KEYS, check_release, run_release_validation, stream_release_validation
 
 NODES = ["planner", "change_analysis", "impact_analysis", "test_selection", "test_execution",
          "risk_assessment", "decision", "critic"]
 
 
 @pytest.fixture(autouse=True)
-def mock_mode(monkeypatch):
-    monkeypatch.setenv("DEPLOYSURE_LLM", "mock")
+def seed_on(monkeypatch):
     monkeypatch.setenv("DEMO_SEED_WRONG_DECISION", "1")
 
 
@@ -44,5 +43,12 @@ def test_bad_release_ids_are_rejected(bad):
         check_release(bad)
 
 
-def test_list_releases():
-    assert [r["release_id"] for r in list_releases()] == ["v2.1", "v2.2"]
+def test_cli_rejects_unknown_release_and_project(capsys):
+    from deploysure import cli
+    assert cli.main(["v9.9"]) == 1
+    assert cli.main(["v2.1", "nope"]) == 1
+
+
+def test_cli_accepts_a_project_argument(capsys):
+    from deploysure import cli
+    assert cli.main(["v2.1", "demo-shop"]) == 0

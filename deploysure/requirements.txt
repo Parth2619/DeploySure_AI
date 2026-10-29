@@ -1,5 +1,6 @@
 langgraph==1.2.15
-ollama==0.6.3
+httpx==0.28.1
+playwright==1.64.0
 pytest==9.1.1
 # server.py only (optional):
 fastapi==0.143.2

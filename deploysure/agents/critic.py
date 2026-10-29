@@ -5,6 +5,7 @@ The rule check alone decides PASS or FAIL, so a weak model cannot talk its way p
 from pydantic import BaseModel
 
 from deploysure.agents.decision_agent import evidence_counts
+from deploysure.models import llm
 from deploysure.models.llm import ask
 from deploysure.orchestration.state import ReleaseState
 from deploysure.tools.risk_formula import decision_allowed, minimum_decision
@@ -30,7 +31,7 @@ def critic(state: ReleaseState) -> dict:
         f"decision: {state['decision']}\nrequired_at_least: {minimum}\nrules_fired: {rules}\nresult: {verdict}"
     )
     answer, fallback = ask(prompt, Review, task="critic", default={"reason": "Written reasoning unavailable."})
-    note = " (model output invalid, rule summary only)" if fallback else ""
+    note = llm.fallback_note("rule summary only") if fallback else ""
     return {
         "critic_result": verdict,
         "critic_reason": f"{summary} {answer['reason']}",

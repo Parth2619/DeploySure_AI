@@ -11,6 +11,7 @@ from deploysure.agents.test_executor import test_execution
 from deploysure.agents.test_selector import test_selection
 from deploysure.orchestration.routing import MAX_RETRIES, route_after_critic
 from deploysure.orchestration.state import ReleaseState
+from deploysure.tools.code_reader import DEFAULT_PROJECT
 
 PIPELINE = [("planner", planner), ("change_analysis", change_analysis), ("impact_analysis", impact_analysis),
             ("test_selection", test_selection), ("test_execution", test_execution),
@@ -48,5 +49,5 @@ def build_graph():
     return graph.compile()
 
 
-def initial_state(release_id: str) -> ReleaseState:
-    return {"release_id": release_id, "retry_count": 0, "feedback": "", "trace": []}
+def initial_state(release_id: str, project_id: str = DEFAULT_PROJECT) -> ReleaseState:
+    return {"release_id": release_id, "project_id": project_id, "retry_count": 0, "feedback": "", "trace": []}

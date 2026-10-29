@@ -1,3 +1,5 @@
+> Obsolete: these results were measured with the old local Ollama backend, which was removed on 20 Oct 2026 in favour of Groq.
+
 # Phase 4 results: real model (Ollama, qwen2.5:7b)
 
 Measured on Manc's laptop (i7-14650HX, RTX 4060 8 GB, model runs 100% on GPU), 16 Oct 2026.

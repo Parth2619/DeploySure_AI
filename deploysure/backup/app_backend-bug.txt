@@ -1,0 +1,16 @@
+﻿[planner          ] done  planner: planned 7 tasks (AI not used, used the fixed plan. Reason: RuntimeError: GROQ_API_KEY is not set)
+[change_scan      ] done  change_scan: 1 file(s) changed: backend (1)
+[check_writing    ] done  check_writing: 4 API check(s) from probes (AI not used, probing endpoints with sample bodies. Reason: RuntimeError: GROQ_API_KEY is not set), 1 browse
+[differential_run ] done  differential_run: API 1 regression(s) of 4, browser 0 regression(s) of 1
+[layer_attribution] done  layer_attribution: backend (medium confidence)
+[risk_assessment  ] done  risk_assessment: score 38 (MEDIUM), components {'change_impact': 3, 'contract_break': 0, 'api_regression': 35, 'ui_regression': 0, 'not_verified': 0}
+[decision         ] done  decision: HOLD (AI not used, used the policy rules. Reason: RuntimeError: GROQ_API_KEY is not set)
+[critic           ] done  critic: PASS, decision HOLD vs required at least HOLD (AI not used, rule summary only. Reason: RuntimeError: GROQ_API_KEY is not set)
+
+v1.2 -> v2.0-backend-bug: HOLD
+  reason:        The model was not available; applied the policy rules directly.
+  faulty layer:  backend (medium confidence)
+                 - API check 'POST /api/orders (sample 2)' gives a different answer: total changed from 2.5 to 1.25.
+  risk:          38 (MEDIUM)
+  API checks:    1 regression(s)    browser: 0 regression(s)
+  critic:        PASS after 0 retry(ies)

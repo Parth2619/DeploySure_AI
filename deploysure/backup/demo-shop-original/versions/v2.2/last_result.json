@@ -1,0 +1,7 @@
+{
+  "decision": "BLOCK",
+  "risk_score": 87,
+  "risk_level": "CRITICAL",
+  "retry_count": 1,
+  "at": "2026-10-19T21:02:15"
+}

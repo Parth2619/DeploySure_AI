@@ -1,0 +1,16 @@
+﻿[planner          ] done  planner: planned 7 tasks (AI not used, used the fixed plan. Reason: RuntimeError: GROQ_API_KEY is not set)
+[change_scan      ] done  change_scan: 1 file(s) changed: frontend (1), 1 contract issue(s)
+[check_writing    ] done  check_writing: 4 API check(s) from probes (AI not used, probing endpoints with sample bodies. Reason: RuntimeError: GROQ_API_KEY is not set), 1 browse
+[differential_run ] done  differential_run: API 0 regression(s) of 4, browser 1 regression(s) of 1
+[layer_attribution] done  layer_attribution: frontend (high confidence)
+[risk_assessment  ] done  risk_assessment: score 73 (HIGH), components {'change_impact': 3, 'contract_break': 30, 'api_regression': 0, 'ui_regression': 40, 'not_verified': 0}
+[decision         ] done  decision: BLOCK (AI not used, used the policy rules. Reason: RuntimeError: GROQ_API_KEY is not set)
+[critic           ] done  critic: PASS, decision BLOCK vs required at least BLOCK (AI not used, rule summary only. Reason: RuntimeError: GROQ_API_KEY is not set)
+
+v1.2 -> v2.1-frontend-bug: BLOCK
+  reason:        The model was not available; applied the policy rules directly.
+  faulty layer:  frontend (high confidence)
+                 - frontend/app.js calls GET /api/product, which the backend does not serve.
+  risk:          73 (HIGH)
+  API checks:    0 regression(s)    browser: 1 regression(s)
+  critic:        PASS after 0 retry(ies)

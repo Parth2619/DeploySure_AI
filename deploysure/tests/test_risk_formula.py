@@ -35,3 +35,8 @@ def test_noncritical_failure_is_scored_lower_than_critical():
 def test_unknown_module_scores_zero_for_customer_and_critical():
     c = calculate_risk(["mystery"], 0, 0, 0, 0)["components"]
     assert c["customer_facing"] == 0 and c["critical_component"] == 0
+
+
+def test_custom_weights_and_critical_modules():
+    r = calculate_risk(["ledger"], 0, 0, 0, 0, critical_modules={"ledger"}, customer_facing={"ledger": 7})
+    assert r["score"] == 37

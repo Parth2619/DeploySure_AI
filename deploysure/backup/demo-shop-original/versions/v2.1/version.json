@@ -1,0 +1,7 @@
+{
+  "version": "v2.1",
+  "baseline": "v2.0",
+  "title": "Friendlier order confirmation message",
+  "notes": "Reworded the order confirmation text sent to customers. No logic changes.",
+  "created": "2026-10-01T00:00:01"
+}

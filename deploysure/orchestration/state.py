@@ -5,6 +5,7 @@ from typing import Annotated, TypedDict
 
 class ReleaseState(TypedDict, total=False):
     release_id: str
+    project_id: str
     baseline: str
     tasks: list[str]
     # change analysis
@@ -16,6 +17,10 @@ class ReleaseState(TypedDict, total=False):
     impact_explanation: str
     selected_tests: list[str]
     selection_reason: str
+    all_test_ids: list[str]  # every test in the version, selected or not, so the UI can list them
+    critical_tests: list[str]  # ids of selected tests that count as critical
+    uncovered_modules: list[str]  # changed modules that no test imports
+    selection_error: str  # set when pytest could not collect the tests
     # execution and risk
     test_results: dict
     risk_score: int

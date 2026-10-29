@@ -26,32 +26,86 @@
     --mono: "Cascadia Mono", "SF Mono", Consolas, monospace;
   }
   * { box-sizing: border-box; }
+  [hidden] { display: none !important; }
   html { background: var(--paper); }
   body { margin: 0; color: var(--ink); font: 15px/1.5 var(--body); min-height: 100vh; }
-  button { font: inherit; }
+  button, input, select, textarea { font: inherit; }
   :focus-visible { outline: 3px solid #2E7BD6; outline-offset: 2px; }
+  a { color: inherit; }
 
+  /* ---------- buttons and forms ---------- */
+  .btn { padding: 11px 18px; border: 2px solid var(--ink); background: var(--ink); color: #fff; cursor: pointer; font: 600 16px/1 var(--display); font-variation-settings: "wdth" 90; letter-spacing: .02em; }
+  .btn:hover:not(:disabled) { background: var(--ink-2); }
+  .btn:disabled { opacity: .5; cursor: not-allowed; }
+  .btn.quiet { background: transparent; color: var(--ink); }
+  .btn.quiet:hover:not(:disabled) { background: #D5DEE7; }
+  .linkbtn { border: 0; background: none; color: var(--stop); text-decoration: underline; cursor: pointer; padding: 0; }
+  dialog { width: min(520px, calc(100vw - 32px)); border: 2px solid var(--ink); background: var(--sheet); color: var(--ink); padding: 24px 26px 22px; }
+  dialog::backdrop { background: rgba(15, 34, 54, .55); }
+  dialog h2 { margin: 0 0 4px; font: 600 26px/1.1 var(--display); font-variation-settings: "wdth" 88; }
+  dialog p.lead { margin: 0 0 18px; color: var(--muted); }
+  .field { display: grid; gap: 4px; margin-bottom: 14px; }
+  .field > span { font-weight: 600; }
+  .field small { color: var(--muted); }
+  .field input[type=text], .field select, .field textarea { width: 100%; padding: 9px 10px; border: 2px solid var(--line); background: #fff; color: var(--ink); }
+  .field input[type=text]:focus, .field select:focus, .field textarea:focus { border-color: var(--ink); outline: none; }
+  .field.check { grid-template-columns: auto 1fr; align-items: start; gap: 10px; }
+  .field.check input { width: 20px; height: 20px; margin-top: 2px; }
+  .form-error { margin: 0 0 12px; min-height: 0; color: var(--stop); font-weight: 600; }
+  .actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 6px; }
+
+  /* ---------- home ---------- */
+  .home-top { background: var(--ink); color: var(--rail-text); padding: 22px clamp(18px, 4vw, 56px); display: flex; flex-wrap: wrap; gap: 14px 24px; align-items: center; justify-content: space-between; }
+  .home-top .brand { font: 600 30px/1 var(--display); font-variation-settings: "wdth" 85; letter-spacing: .01em; }
+  .home-top .brand small { display: block; margin-top: 8px; font: 400 14px/1.4 var(--body); color: var(--rail-dim); letter-spacing: 0; }
+  .home-top .btn { background: var(--rail-text); color: var(--ink); border-color: var(--rail-text); }
+  .home-top .btn:hover { background: #fff; }
+  .home-main { padding: 34px clamp(18px, 4vw, 56px) 70px; display: grid; gap: 26px; }
+  .home-head { display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+  .home-head h1 { margin: 0; font: 600 42px/1 var(--display); font-variation-settings: "wdth" 85; }
+  .search { width: min(340px, 100%); padding: 10px 12px; border: 2px solid var(--line); background: #fff; }
+  .search:focus { border-color: var(--ink); outline: none; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 28px 30px; }
+  .pcard { display: grid; gap: 6px; align-content: start; border-top: 4px solid var(--ink); padding: 14px 2px 6px; text-decoration: none; transition: background .15s; }
+  .pcard:hover { background: var(--sheet); }
+  .pcard h2 { margin: 0; font: 600 26px/1.1 var(--display); font-variation-settings: "wdth" 90; }
+  .pverdict { font: 700 54px/1 var(--display); font-variation-settings: "wdth" 78; margin: 6px 0 2px; }
+  .pverdict.DEPLOY { color: var(--go); } .pverdict.HOLD { color: var(--hold); } .pverdict.BLOCK { color: var(--stop); }
+  .pverdict.none { font: 400 18px/1.4 var(--body); color: var(--muted); margin: 14px 0 12px; }
+  .pmeta { margin: 0; color: var(--muted); font-size: 14px; }
+  .pmeta.err { color: var(--stop); }
+  .emptybox { border: 2px dashed var(--line); padding: 34px 28px; max-width: 640px; }
+  .emptybox h2 { margin: 0 0 6px; font: 600 24px var(--display); font-variation-settings: "wdth" 90; }
+  .emptybox p { margin: 0 0 16px; color: var(--muted); }
+
+  /* ---------- project page ---------- */
   .console { display: grid; grid-template-columns: 360px 1fr; min-height: 100vh; }
-
-  /* ---------- rail ---------- */
-  .rail { background: var(--ink); color: var(--rail-text); padding: 28px 26px 32px; display: flex; flex-direction: column; gap: 28px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  .rail { background: var(--ink); color: var(--rail-text); padding: 24px 26px 32px; display: flex; flex-direction: column; gap: 24px; position: sticky; top: 0; height: 100vh; overflow-y: auto; }
+  .back { color: var(--rail-dim); text-decoration: none; font-size: 14px; }
+  .back:hover { color: var(--rail-text); text-decoration: underline; }
   .brand { font: 600 30px/1 var(--display); font-variation-settings: "wdth" 85; letter-spacing: .01em; }
   .brand small { display: block; margin-top: 8px; font: 400 14px/1.4 var(--body); color: var(--rail-dim); letter-spacing: 0; }
 
-  .releases { display: grid; gap: 10px; border: 0; margin: 0; padding: 0; }
+  .releases { display: grid; gap: 10px; border: 0; margin: 0; padding: 0; min-width: 0; }
   .releases legend { padding: 0; margin-bottom: 10px; color: var(--rail-dim); font-size: 14px; }
-  .release { position: relative; display: block; cursor: pointer; padding: 14px 16px 14px; border: 1px solid #2D4663; background: var(--ink-2); transition: border-color .15s, background .15s; }
+  .release { position: relative; display: block; cursor: pointer; padding: 12px 16px; border: 1px solid #2D4663; background: var(--ink-2); transition: border-color .15s, background .15s; }
   .release:hover { border-color: #5C7B9C; }
   .release input { position: absolute; opacity: 0; inset: 0; cursor: pointer; }
   .release:has(input:checked) { border-color: var(--rail-text); background: #223E5E; }
   .release:has(input:focus-visible) { outline: 3px solid #6FB0FF; outline-offset: 2px; }
-  .release b { display: block; font: 600 40px/1 var(--display); font-variation-settings: "wdth" 80; }
+  .release:has(input:disabled) { cursor: default; opacity: .65; border-style: dashed; }
+  .release input:disabled { cursor: default; }
+  .release b { display: block; font: 600 34px/1 var(--display); font-variation-settings: "wdth" 80; overflow-wrap: anywhere; }
   .release span { display: block; margin-top: 6px; color: var(--rail-dim); font-size: 14px; }
   .release:has(input:checked) span { color: var(--rail-text); }
+  .release em { display: block; margin-top: 6px; font: normal 13px var(--mono); color: #9FB6CC; }
+  .rail .btn.add { background: transparent; color: var(--rail-text); border-color: #3A5373; }
+  .rail .btn.add:hover { background: #223E5E; }
+  .rail .hintline { margin: 0; color: var(--rail-dim); font-size: 14px; }
 
   .go { width: 100%; padding: 15px 18px; border: 0; cursor: pointer; background: var(--rail-text); color: var(--ink); font: 600 18px/1 var(--display); font-variation-settings: "wdth" 90; letter-spacing: .02em; transition: background .15s; }
   .go:hover:not(:disabled) { background: #fff; }
-  .go:disabled { background: #3A5373; color: var(--rail-dim); cursor: progress; }
+  .go:disabled { background: #3A5373; color: var(--rail-dim); cursor: not-allowed; }
 
   .agents-head { display: flex; justify-content: space-between; align-items: baseline; color: var(--rail-dim); font-size: 14px; margin-bottom: 8px; }
   .agents-head output { font: 400 13px var(--mono); }
@@ -66,10 +120,8 @@
   .agent[data-state="done"] { color: var(--rail-text); }
   .agent[data-state="done"] i { border-color: #6FD3A1; background: #6FD3A1; }
   .agent[data-state="done"] i::after { content: ""; position: absolute; left: 4px; top: 0; width: 5px; height: 9px; border: solid var(--ink); border-width: 0 2px 2px 0; transform: rotate(45deg); }
-  .agent[data-state="failed"] i { border-color: #FF8C82; background: #FF8C82; }
   @keyframes pulse { 50% { box-shadow: 0 0 0 7px rgba(242, 193, 78, .22); } }
 
-  /* ---------- stage ---------- */
   .stage { padding: 30px clamp(18px, 3.2vw, 48px) 60px; display: grid; gap: 34px; align-content: start; min-width: 0; }
 
   .verdict { display: grid; grid-template-columns: auto 1fr; gap: 30px; align-items: center; padding: 22px 28px; border: 2px solid var(--line); background: var(--sheet); min-height: 170px; }
@@ -92,7 +144,7 @@
 
   .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 34px 44px; }
   .panel { border-top: 3px solid var(--ink); padding-top: 12px; min-width: 0; }
-  .panel h2 { margin: 0 0 12px; font: 600 22px/1.1 var(--display); font-variation-settings: "wdth" 90; }
+  .panel h2, .section h2 { margin: 0 0 12px; font: 600 22px/1.1 var(--display); font-variation-settings: "wdth" 90; }
   .empty { color: var(--muted); margin: 0; }
   .filerow { display: flex; flex-wrap: wrap; gap: 6px 10px; align-items: baseline; padding: 6px 0; border-bottom: 1px solid var(--line); }
   .mono { font-family: var(--mono); font-size: 13.5px; }
@@ -103,16 +155,27 @@
 
   .matrix { display: grid; grid-template-columns: repeat(10, 1fr); gap: 5px; margin-bottom: 12px; max-width: 460px; }
   .cell { aspect-ratio: 1; border: 2px dashed var(--line); background: transparent; }
-  .cell[data-s="queued"] { border: 2px solid var(--ink-2); background: transparent; }
+  .cell[data-s="queued"] { border: 2px solid var(--ink-2); }
   .cell[data-s="passed"] { border: 2px solid var(--go); background: var(--go); }
   .cell[data-s="failed"] { border: 2px solid var(--stop); background: repeating-linear-gradient(45deg, var(--stop) 0 4px, #E58C85 4px 8px); }
-  .cell[data-s="critical"]::after { content: ""; }
   .legend { display: flex; flex-wrap: wrap; gap: 4px 16px; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
   .legend span::before { content: ""; display: inline-block; width: 11px; height: 11px; margin-right: 6px; vertical-align: -1px; border: 2px solid var(--line); }
   .legend .p::before { background: var(--go); border-color: var(--go); }
   .legend .f::before { background: var(--stop); border-color: var(--stop); }
   .legend .q::before { border-color: var(--ink-2); }
   .legend .n::before { border-style: dashed; }
+  .alltests { margin-top: 12px; }
+  .alltests summary { cursor: pointer; font-weight: 600; }
+  .alltests ul { list-style: none; margin: 8px 0 0; padding: 0; max-height: 320px; overflow: auto; }
+  .alltests li { display: grid; grid-template-columns: 6.5rem 1fr auto; gap: 10px; align-items: baseline; padding: 4px 0; border-bottom: 1px solid var(--line); }
+  #alltests-list li { display: flex; gap: 10px; align-items: baseline; }
+  #alltests-list li .mono { flex: 1; }
+  #dlg-file { width: min(860px, calc(100vw - 32px)); }
+  .code { font: 13px/1.5 var(--mono); tab-size: 4; white-space: pre; overflow: auto; resize: vertical; }
+  .linkbtn.edit { color: var(--ink-2); }
+  .alltests .st { font-weight: 600; font-size: 13px; }
+  .alltests li[data-s="passed"] .st { color: var(--go); } .alltests li[data-s="failed"] .st { color: var(--stop); }
+  .alltests li[data-s="queued"] .st { color: var(--ink-2); } .alltests li[data-s="skipped"] .st { color: var(--muted); font-weight: 400; }
   .failed-list { margin: 8px 0 0; padding: 0; list-style: none; }
   .failed-list li { color: var(--stop); font: 13.5px var(--mono); padding: 2px 0; }
 
@@ -132,7 +195,7 @@
   .parts .bar i { display: block; height: 100%; background: var(--ink-2); transition: width .5s ease; }
   .parts em { font: normal 13px var(--mono); text-align: right; color: var(--muted); }
 
-  .ledger { border-top: 3px solid var(--ink); padding-top: 12px; }
+  .ledger, .section { border-top: 3px solid var(--ink); padding-top: 12px; }
   .ledger h2 { margin: 0 0 4px; font: 600 22px/1.1 var(--display); font-variation-settings: "wdth" 90; }
   .ledger > p { margin: 0 0 16px; }
   .attempt { display: grid; grid-template-columns: 9rem 1fr 1fr; gap: 6px 26px; padding: 16px 0; border-top: 1px solid var(--line); align-items: start; }
@@ -146,6 +209,11 @@
   .seeded { display: inline-block; margin-top: 6px; padding: 2px 8px; background: var(--hold-bg); border: 1px solid var(--hold); font-size: 13px; }
   .attempt p { margin: 4px 0 0; font-size: 14px; max-width: 58ch; }
   .rules { margin: 6px 0 0; padding-left: 18px; font-size: 14px; color: var(--ink-2); }
+
+  .section .head { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+  .section .head h2 { margin: 0; }
+  .case { display: flex; flex-wrap: wrap; gap: 4px 14px; align-items: baseline; padding: 9px 0; border-bottom: 1px solid var(--line); }
+  .case .mono { flex: 1 1 280px; color: var(--muted); }
 
   details.trace { border-top: 3px solid var(--ink); padding-top: 12px; }
   details.trace summary { cursor: pointer; font: 600 22px/1.1 var(--display); font-variation-settings: "wdth" 90; list-style-position: outside; }
@@ -165,15 +233,48 @@
     *, *::before, *::after { animation: none !important; transition: none !important; }
   }
 </style>
+<link rel="stylesheet" href="app-mode.css?v=6">
 </head>
 <body>
-<div class="console">
-  <aside class="rail">
-    <div class="brand">DeploySure AI<small>Decides whether a release is safe to ship, then checks its own decision.</small></div>
 
-    <form id="form" class="releases-form" style="display:grid;gap:14px">
-      <fieldset class="releases" id="releases"><legend>Release to check</legend><p style="margin:0;color:var(--rail-dim)">Loading releases</p></fieldset>
-      <button class="go" id="go" type="submit" disabled>Analyze release</button>
+<!-- ============ home: apps and projects ============ -->
+<div id="view-home" hidden>
+  <header class="home-top">
+    <div class="brand">DeploySure AI<small>Decides whether a release is safe to ship, then checks its own decision.</small></div>
+    <div class="home-actions">
+      <button class="btn" type="button" id="open-app">Connect app</button>
+      <button class="btn" type="button" id="open-project">Add project</button>
+    </div>
+  </header>
+  <main class="home-main">
+    <section aria-labelledby="apps-title">
+      <div class="home-head">
+        <div><h1 id="apps-title">Apps</h1><p class="apps-intro">A whole web app in a git repo, frontend and backend together. DeploySure watches its commits and says which layer a change breaks.</p></div>
+      </div>
+      <div class="cards" id="app-cards" aria-live="polite" style="margin-top:22px"></div>
+    </section>
+    <div class="home-head">
+      <h1>Python projects</h1>
+      <input class="search" id="search" type="search" placeholder="Search projects" aria-label="Search projects">
+    </div>
+    <div class="cards" id="cards" aria-live="polite"></div>
+  </main>
+</div>
+
+<!-- ============ project page ============ -->
+<div class="console" id="view-project" hidden>
+  <aside class="rail">
+    <div>
+      <a class="back" href="#/">All projects</a>
+      <div class="brand" id="pname" style="margin-top:14px"></div>
+      <p class="hintline" id="pcrit" style="margin-top:8px"></p>
+    </div>
+
+    <form id="form" style="display:grid;gap:14px">
+      <fieldset class="releases" id="releases"><legend>Versions</legend></fieldset>
+      <p class="hintline" id="hint" hidden>Add a second version to compare it with the first.</p>
+      <button class="go" id="go" type="submit" disabled>Analyze version</button>
+      <button class="btn add" id="open-version" type="button">Add version</button>
     </form>
 
     <div>
@@ -186,8 +287,8 @@
     <section class="verdict" id="verdict" aria-label="Verdict">
       <div class="stamp" id="stamp">Waiting</div>
       <div>
-        <h1 id="vtitle">No release analyzed yet</h1>
-        <p id="vtext">Choose a release on the left and press Analyze release. The agents will work through it one by one, and the verdict lands here.</p>
+        <h1 id="vtitle">No version analyzed yet</h1>
+        <p id="vtext">Choose a version on the left and press Analyze version. The agents work through it one by one, and the verdict lands here.</p>
         <p class="facts" id="vfacts"></p>
       </div>
     </section>
@@ -207,6 +308,20 @@
       <div id="attempts"><p class="empty">No decisions yet.</p></div>
     </section>
 
+    <section class="section" id="cases-section">
+      <div class="head">
+        <h2>Test cases</h2>
+        <button class="btn quiet" type="button" id="open-test">Add test case</button>
+      </div>
+      <p class="note">Your own checks. Each one runs against every version of this project.</p>
+      <div id="cases"></div>
+      <details class="alltests" id="alltests-box">
+        <summary id="alltests-summary">All tests in the newest version</summary>
+        <p class="note" id="alltests-note">Loading the list.</p>
+        <ul id="alltests-list"></ul>
+      </details>
+    </section>
+
     <details class="trace" id="trace-box">
       <summary>Live trace</summary>
       <div class="log" id="log" role="log"><div><time></time><span>The trace fills in as agents finish.</span></div></div>
@@ -214,6 +329,154 @@
   </main>
 </div>
 
+<!-- ============ dialogs ============ -->
+<dialog id="dlg-project" aria-labelledby="t-project">
+  <form method="dialog">
+    <h2 id="t-project">Add project</h2>
+    <p class="lead">Point DeploySure at the folder holding the first version of your Python project. It copies the code, so your folder stays untouched.</p>
+    <label class="field"><span>Project name</span><input type="text" name="name" required maxlength="60" autocomplete="off"></label>
+    <label class="field"><span>Folder of the first version</span><input type="text" name="folder_path" required placeholder="D:\projects\my-shop\v1" autocomplete="off"><small>Python files directly in this folder, with pytest tests.</small></label>
+    <label class="field"><span>Name of this version</span><input type="text" name="version" value="v1.0" required maxlength="30" autocomplete="off"></label>
+    <label class="field"><span>Critical modules</span><input type="text" name="critical_modules" placeholder="payment, refund" autocomplete="off"><small>Modules where a failure must block a release. Separate with commas. Leave empty if none.</small></label>
+    <p class="form-error" role="alert"></p>
+    <div class="actions"><button class="btn quiet" type="button" data-cancel>Cancel</button><button class="btn" type="submit">Add project</button></div>
+  </form>
+</dialog>
+
+<dialog id="dlg-version" aria-labelledby="t-version">
+  <form method="dialog">
+    <h2 id="t-version">Add version</h2>
+    <p class="lead">The new version is compared with the one before it.</p>
+    <label class="field"><span>Version name</span><input type="text" name="version" required maxlength="30" autocomplete="off"></label>
+    <label class="field"><span>Folder of this version</span><input type="text" name="folder_path" required placeholder="D:\projects\my-shop\v2" autocomplete="off"></label>
+    <label class="field"><span>Release notes</span><textarea name="notes" rows="3" placeholder="What changed in this version?"></textarea></label>
+    <p class="form-error" role="alert"></p>
+    <div class="actions"><button class="btn quiet" type="button" data-cancel>Cancel</button><button class="btn" type="submit">Add version</button></div>
+  </form>
+</dialog>
+
+<dialog id="dlg-file" aria-labelledby="t-file">
+  <form method="dialog">
+    <h2 id="t-file">Test file</h2>
+    <p class="lead" id="file-lead"></p>
+    <label class="field"><span>Python code</span><textarea class="code" name="source" rows="18" spellcheck="false"></textarea></label>
+    <p class="form-error" role="alert"></p>
+    <div class="actions"><button class="btn quiet" type="button" data-cancel>Close</button><button class="btn" type="submit" id="file-save">Save file</button></div>
+  </form>
+</dialog>
+
+<dialog id="dlg-test" aria-labelledby="t-test">
+  <form method="dialog">
+    <h2 id="t-test">Add test case</h2>
+    <p class="lead">Write your own check in Python (pytest). It runs against every version of this project.</p>
+    <label class="field"><span>Title</span><input type="text" name="title" required maxlength="80" autocomplete="off" placeholder="Refund returns the full amount"></label>
+    <label class="field"><span>Python code</span><textarea class="code" name="source" rows="12" spellcheck="false" required></textarea><small>Import a module of the project and assert what must be true. Every function whose name starts with test is run.</small></label>
+    <label class="field check"><input type="checkbox" name="critical"><span>Critical test<br><small>If it fails, the release is blocked.</small></span></label>
+    <p class="form-error" role="alert"></p>
+    <div class="actions"><button class="btn quiet" type="button" data-cancel>Cancel</button><button class="btn" type="submit">Add test case</button></div>
+  </form>
+</dialog>
+
+<!-- ============ app page: a whole app in a git repo ============ -->
+<div class="console" id="view-app" hidden>
+  <aside class="rail">
+    <div>
+      <a class="back" href="#/">All apps</a>
+      <div class="brand" id="app-name" style="margin-top:14px"></div>
+      <p class="repo" id="app-repo"></p>
+      <p class="repo" id="app-sync" hidden></p>
+    </div>
+    <label class="watch" id="app-watch-box"><input type="checkbox" id="app-watch"><span>Analyze new commits automatically</span><small>Works while this page is open. Each new commit is compared with its parent.</small></label>
+    <div>
+      <div class="agents-head"><span>Commits</span><output id="app-commit-count"></output></div>
+      <ol class="commits" id="app-commits"></ol>
+    </div>
+    <div class="tools">
+      <details id="app-compare"><summary>Compare any two commits</summary>
+        <label>Old (tag, branch or sha)<input id="cmp-old" placeholder="v1.2" autocomplete="off"></label>
+        <label>New<input id="cmp-new" placeholder="v2.2-contract-break" autocomplete="off"></label>
+        <button class="btn" type="button" id="cmp-go">Analyze</button>
+      </details>
+      <details id="app-remove"><summary>Remove this app</summary>
+        <small>Forgets the app and its saved analyses. The repo itself is never touched.</small>
+        <button class="btn" type="button" id="app-remove-go">Remove app</button>
+      </details>
+      <details id="app-demo" hidden><summary>Demo: play the developer</summary>
+        <label>Change to commit<select id="demo-change">
+          <option value="safe-copy">A harmless copy change</option><option value="backend-bug">Backend bug (total ignores quantity)</option>
+          <option value="frontend-bug">Frontend bug (wrong route)</option><option value="contract-break">Contract break (price renamed)</option></select></label>
+        <button class="btn" type="button" id="demo-go">Simulate a developer commit</button>
+        <small>Adds a real commit to this demo repo. Turn on the watch above and DeploySure analyzes it by itself.</small>
+      </details>
+    </div>
+    <div>
+      <div class="agents-head"><span id="app-pass">Agents</span><button type="button" class="expand" id="app-details" aria-haspopup="dialog">Expand</button><output id="app-elapsed">0.0 s</output></div>
+      <ol class="agents" id="app-agents"></ol>
+    </div>
+  </aside>
+
+  <main class="stage" aria-live="polite">
+    <p class="newbanner" id="app-new" hidden></p>
+    <div class="runbar"><p class="what" id="app-what"></p><button class="btn" id="app-analyze" type="button" disabled>Analyze</button></div>
+    <section class="verdict" id="a-verdict" aria-label="Verdict">
+      <div class="stamp" id="a-stamp">Waiting</div>
+      <div>
+        <h1 id="a-vtitle">Pick a commit</h1>
+        <p id="a-vtext">Choose a commit on the left. If it has not been analyzed, press Analyze and the agents compare it with the commit before it.</p>
+        <p class="facts" id="a-vfacts"></p>
+      </div>
+    </section>
+    <section class="chainbox" id="a-chain" hidden>
+      <h2>Which layer broke</h2>
+      <div class="chain">
+        <div class="node" id="n-frontend"><b>Frontend</b><small></small></div>
+        <div class="join" id="n-connection"><span>Connection</span></div>
+        <div class="node" id="n-backend"><b>Backend</b><small></small></div>
+      </div>
+      <p class="envnote" id="n-environment" hidden></p>
+      <ul class="why" id="a-why"></ul>
+      <p class="confidence" id="a-confidence"></p>
+    </section>
+    <div class="grid">
+      <section class="panel" id="ap-changed"><h2>What changed</h2><p class="empty">Waiting for the change scan.</p></section>
+      <section class="panel" id="ap-contract"><h2>Frontend and backend</h2><p class="empty">Waiting for the change scan.</p></section>
+      <section class="panel" id="ap-api"><h2>API checks</h2><p class="empty">Waiting for the old and new version to run.</p></section>
+      <section class="panel" id="ap-browser"><h2>Browser checks</h2><p class="empty">Waiting for the old and new version to run.</p></section>
+      <section class="panel" id="ap-risk"><h2>Risk</h2><p class="empty">Waiting for the risk score.</p></section>
+      <section class="panel" id="ap-decide"><h2>Decision and Critic</h2><p class="empty">Waiting for the decision.</p></section>
+      <section class="panel" id="ap-talk"><h2>What the agents told each other</h2><p class="empty">Waiting for the agents.</p></section>
+    </div>
+    <details class="trace"><summary>Live trace</summary><div class="log" id="a-log" role="log"></div></details>
+  </main>
+</div>
+
+<dialog id="dlg-app" aria-labelledby="t-app">
+  <form method="dialog">
+    <h2 id="t-app">Connect an app</h2>
+    <p class="lead">Point DeploySure at the folder of a git repository that holds a web app. It only reads the repo and never changes it.</p>
+    <div class="examples" id="app-examples"></div>
+    <label class="field"><span>GitHub link</span><input type="text" name="repo_url" placeholder="https://github.com/owner/repo" autocomplete="off" inputmode="url"><small>A public repository. DeploySure downloads it and checks GitHub for new commits every few seconds, so you never pull by hand.</small></label>
+    <p class="or">or a folder on this computer</p>
+    <label class="field"><span>App name</span><input type="text" name="name" maxlength="80" autocomplete="off"><small>Optional for a GitHub link, it then uses the repository name.</small></label>
+    <label class="field"><span>Repo folder</span><div class="pick"><input type="text" name="repo_path" placeholder="D:\projects\my-app" autocomplete="off"><button class="btn quiet" type="button" id="pick-folder">Browse</button></div><small>The folder that contains the .git folder. Browse lists the folders on this computer.</small></label>
+    <div class="chooser" id="chooser" hidden>
+      <div class="chooser-bar"><button class="btn quiet" type="button" id="chooser-up">Up</button><code id="chooser-path"></code></div>
+      <ul id="chooser-list"></ul>
+      <div class="chooser-foot"><span id="chooser-note"></span><button class="btn" type="button" id="chooser-use">Use this folder</button></div>
+    </div>
+    <p class="form-note" id="connect-note" role="status"></p>
+    <p class="form-error" role="alert"></p>
+    <div class="actions"><button class="btn quiet" type="button" data-cancel>Cancel</button><button class="btn" type="submit">Connect app</button></div>
+  </form>
+</dialog>
+
+<dialog id="dlg-pipeline" class="wide" aria-labelledby="t-pipeline">
+  <div class="pl-head"><h2 id="t-pipeline">Pipeline details</h2><button class="btn quiet" type="button" id="pl-close">Close</button></div>
+  <p class="lead" id="pl-lead">What each agent received and what it produced in this analysis.</p>
+  <div id="pl-body"></div>
+</dialog>
+
+<script src="app-mode.js?v=6"></script>
 <script>
 const AGENTS = [
   { id: "planner", name: "Planner", how: "model" },
@@ -243,47 +506,187 @@ function h(tag, attrs = {}, ...kids) {
 }
 const reveal = (panel, ...kids) => panel.replaceChildren(panel.querySelector("h2"), ...kids);
 
-let run, timer;
+async function api(path, options) {
+  const res = await fetch(path, options);
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error(typeof body.detail === "string" ? body.detail : "Please check the fields and try again.");
+  }
+  return res.status === 204 ? null : res.json();
+}
+const post = (path, body) => api(path, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
 
-function freshRun() {
-  return { pass: 1, attempts: [], total: null, tests: null };
+function timeAgo(iso) {
+  const mins = Math.max(0, Math.round((Date.now() - new Date(iso)) / 60000));
+  if (mins < 1) return "just now";
+  if (mins < 60) return mins + " min ago";
+  if (mins < 1440) return Math.round(mins / 60) + " h ago";
+  return Math.round(mins / 1440) + " days ago";
 }
 
+/* ---------------- home ---------------- */
+let projects = [];
+
+async function showHome() {
+  $("view-project").hidden = true; $("view-app").hidden = true; $("view-home").hidden = false;
+  document.title = "DeploySure AI";
+  loadApps();
+  try { projects = await api("/projects"); } catch (err) {
+    $("cards").replaceChildren(h("p", { class: "empty" }, "Cannot reach the server. Start it with: uvicorn deploysure.server:app --port 8000"));
+    return;
+  }
+  drawCards();
+}
+
+function drawCards() {
+  const q = $("search").value.trim().toLowerCase();
+  const shown = projects.filter((p) => p.name.toLowerCase().includes(q));
+  if (!projects.length) {
+    $("cards").replaceChildren(h("div", { class: "emptybox" }, h("h2", {}, "No projects yet"),
+      h("p", {}, "Add a Python project and its first version. Then add newer versions and check each one before it ships."),
+      h("button", { class: "btn", type: "button", onclick: openProject }, "Add project")));
+  } else if (!shown.length) {
+    $("cards").replaceChildren(h("p", { class: "empty" }, "No project matches your search."));
+  } else {
+    $("cards").replaceChildren(...shown.map(projectCard));
+  }
+}
+
+function projectCard(p) {
+  if (p.error) return h("a", { class: "pcard", href: "#/p/" + p.id }, h("h2", {}, p.id), h("p", { class: "pmeta err" }, p.error));
+  const r = p.last_result;
+  return h("a", { class: "pcard", href: "#/p/" + p.id },
+    h("h2", {}, p.name),
+    r ? h("div", { class: "pverdict " + r.decision }, r.decision) : h("div", { class: "pverdict none" }, "Not analyzed yet"),
+    h("p", { class: "pmeta" }, r ? `Risk ${r.risk_score} (${r.risk_level}) on ${p.latest_version}, ${timeAgo(r.at)}${r.stale ? ". Tests changed since." : ""}` : `Latest version ${p.latest_version}`),
+    h("p", { class: "pmeta" }, `${p.version_count} version${p.version_count === 1 ? "" : "s"}`));
+}
+
+/* ---------------- project page ---------------- */
+let view = null;      // { id, project, tests }
+let running = null;   // AbortController of the analysis in progress
+let run;              // per analysis scratch state
+
+async function showProject(id) {
+  $("view-home").hidden = true; $("view-app").hidden = true;
+  let data;
+  try { data = await fetchProject(id); } catch { location.hash = "#/"; return; }
+  $("view-project").hidden = false;
+  resetStage();
+  applyProject(data);
+}
+
+async function fetchProject(id) {
+  const [project, tests] = await Promise.all([api(`/projects/${id}`), api(`/projects/${id}/tests`)]);
+  return { id, project, tests };
+}
+
+function applyProject(data, keep) {
+  const sameProject = view && view.id === data.id;
+  view = data;
+  allTestsLoaded = false;
+  if (sameProject) reloadAllTests();  // keep the list open, but refresh it
+  else { $("alltests-box").open = false; $("alltests-summary").textContent = "All tests in the newest version"; }
+  document.title = data.project.name + " | DeploySure AI";
+  $("pname").textContent = data.project.name;
+  const critical = data.project.critical_modules;
+  $("pcrit").textContent = critical.length ? "Critical modules: " + critical.join(", ") : "No critical modules set.";
+  // The demo shop is read-only on the server, so do not offer buttons that can only fail.
+  $("open-version").hidden = $("open-test").hidden = !!data.project.protected;
+  drawVersions(keep);
+  drawCases();
+}
+
+function drawVersions(keep) {
+  const versions = [...view.project.versions].reverse();
+  const analyzable = versions.filter((v) => v.baseline);
+  const pick = versions.find((v) => v.version === keep && v.baseline) ? keep : analyzable[0]?.version;
+  $("releases").replaceChildren(h("legend", {}, "Versions"), ...versions.map((v) =>
+    h("label", { class: "release" },
+      h("input", { type: "radio", name: "rel", value: v.version, checked: v.version === pick, disabled: !v.baseline }),
+      h("b", {}, v.version),
+      h("span", {}, v.baseline ? `${v.title}. Compared with ${v.baseline}.` : "First version. Nothing to compare it with."),
+      v.last_result ? h("em", {}, `Last result: ${v.last_result.decision}, risk ${v.last_result.risk_score}${v.last_result.stale ? " (tests changed since)" : ""}`) : null)));
+  $("hint").hidden = analyzable.length > 0;
+  $("go").disabled = !analyzable.length || !!running;
+}
+
+const testNames = (source) => [...source.matchAll(/^\s*(?:async\s+)?def\s+(test\w*)/gm)].map((m) => m[1]);
+
+function caseLabel(id) {
+  const m = /^test_case_(\d+)\.py::(.+)$/.exec(id);
+  const c = m && view.tests.find((t) => t.id === +m[1]);
+  if (!c) return id;
+  return "Your test: " + c.title + (testNames(c.source).length > 1 ? ` (${m[2]})` : "");
+}
+
+function drawCases() {
+  $("cases").replaceChildren(...(view.tests.length ? view.tests.map((c) =>
+    h("div", { class: "case" }, h("b", {}, c.title), c.critical ? h("span", { class: "tag" }, "critical") : null,
+      h("span", { class: "mono" }, "Python: " + (testNames(c.source).join(", ") || "no test function found")),
+      h("button", { class: "linkbtn edit", type: "button", onclick: () => openEdit(c) }, "Edit"),
+      h("button", { class: "linkbtn", type: "button", onclick: () => removeCase(c.id) }, "Delete")))
+    : [h("p", { class: "empty" }, view.project.protected
+      ? "The demo shop is read-only so the demo always works. Add your own project to try test cases."
+      : "No test cases yet. Add one to run it against every version.")]));
+}
+
+async function removeCase(id) {
+  await api(`/projects/${view.id}/tests/${id}`, { method: "DELETE" });
+  view.tests = view.tests.filter((t) => t.id !== id);
+  drawCases();
+  reloadAllTests();
+}
+
+/* every test of the newest version, loaded when the list is opened */
+let allTestsLoaded = false;
+
+async function loadAllTests() {
+  const note = $("alltests-note"), list = $("alltests-list");
+  note.hidden = false; note.textContent = "Loading the list.";
+  try {
+    const tests = await api(`/projects/${view.id}/all-tests`);
+    $("alltests-summary").textContent = `All ${tests.length} tests in ${view.project.versions.at(-1).version}`;
+    note.hidden = true;
+    const locked = view.project.locked_test_files || [];
+    list.replaceChildren(...tests.map((t) => {
+      const file = t.id.split("::")[0];  // your own test cases (test_case_N.py) are edited with their Edit button instead
+      return h("li", {}, h("span", { class: "mono" }, caseLabel(t.id)), t.critical ? h("span", { class: "tag" }, "critical") : null,
+        /^test_case_/.test(file) ? null : h("button", { class: "linkbtn edit", type: "button", onclick: () => openTestFile(file) }, view.project.protected || locked.includes(file) ? "View file" : "Edit file"));
+    }));
+    allTestsLoaded = true;
+  } catch (err) { note.textContent = err.message; }
+}
+
+function reloadAllTests() {
+  allTestsLoaded = false;
+  if ($("alltests-box").open) loadAllTests();
+}
+$("alltests-box").addEventListener("toggle", () => { if ($("alltests-box").open && !allTestsLoaded) loadAllTests(); });
+
+/* ---------------- analysis stage (unchanged behaviour) ---------------- */
 function renderAgents(states = {}) {
   $("agents").replaceChildren(...AGENTS.map((a) =>
     h("li", { class: "agent", "data-state": states[a.id] || "pending", id: "ag-" + a.id }, h("i"), h("div", {}, h("b", {}, a.name), h("small", {}, a.how)))));
 }
 const setAgent = (id, state) => { const el = $("ag-" + id); if (el) el.dataset.state = state; };
 
-async function loadReleases() {
-  try {
-    const list = await (await fetch("/releases")).json();
-    $("releases").replaceChildren(h("legend", {}, "Release to check"), ...list.map((r, i) =>
-      h("label", { class: "release" }, h("input", { type: "radio", name: "rel", value: r.release_id, checked: i === 0 }),
-        h("b", {}, r.release_id), h("span", {}, r.title + " (compared with " + r.baseline + ")"))));
-    $("go").disabled = false;
-  } catch {
-    $("releases").replaceChildren(h("legend", {}, "Release to check"),
-      h("p", { style: "margin:0;color:#FF9C93" }, "Cannot reach the server. Start it with: uvicorn deploysure.server:app --port 8000"));
-  }
-}
-
 function resetStage() {
-  run = freshRun();
+  run = { pass: 1, attempts: [], total: null, selected: [], allIds: [] };
   renderAgents();
-  $("pass").textContent = "Agents";
-  document.querySelectorAll(".panel").forEach((p) => reveal(p, h("p", { class: "empty" }, "Waiting for this agent.")));
+  $("pass").textContent = "Agents"; $("elapsed").textContent = "0.0 s"; $("go").textContent = "Analyze version";
+  document.querySelectorAll("#view-project .panel").forEach((p) => reveal(p, h("p", { class: "empty" }, "Waiting for this agent.")));
   $("attempts").replaceChildren(h("p", { class: "empty" }, "No decisions yet."));
   $("plan").replaceChildren();
   $("log").replaceChildren();
-  const v = $("verdict"); delete v.dataset.v;
-  $("stamp").textContent = "Checking"; $("vtitle").textContent = "Agents are working";
-  $("vtext").textContent = "The verdict appears when the Critic has approved a decision."; $("vfacts").textContent = "";
+  delete $("verdict").dataset.v;
+  $("stamp").textContent = "Waiting"; $("vtitle").textContent = "No version analyzed yet";
+  $("vtext").textContent = "Choose a version on the left and press Analyze version. The agents work through it one by one, and the verdict lands here.";
+  $("vfacts").textContent = "";
 }
 
-function log(ev, line) {
-  const t = (ev.timestamp || "").slice(11, 23);
-  $("log").append(h("div", {}, h("time", {}, t), h("span", {}, line)));
+function log(ev, line, cls) {
+  $("log").append(h("div", { class: cls || "" }, h("time", {}, (ev.timestamp || "").slice(11, 23)), h("span", {}, line)));
   $("log").scrollTop = 1e9;
 }
 
@@ -300,14 +703,43 @@ function renderLedger() {
   }));
 }
 
+function drawMatrix(results, reason) {
+  const rows = results ? results.results : run.selected.map((id) => ({ id, status: "queued" }));
+  const cells = rows.map((r) => h("span", { class: "cell", "data-s": r.status, title: caseLabel(r.id) + (r.status === "queued" ? " (selected)" : " " + r.status) }));
+  for (let i = rows.length; i < run.total; i++) cells.push(h("span", { class: "cell", "data-s": "skipped", title: "not selected" }));
+  const kids = [
+    h("div", { class: "legend" }, h("span", { class: "p" }, "Passed"), h("span", { class: "f" }, "Failed"), h("span", { class: "q" }, "Selected, not run yet"), h("span", { class: "n" }, "Not selected")),
+    h("div", { class: "matrix" }, cells),
+  ];
+  if (results) {
+    kids.push(h("p", { class: "note" }, results.error ? "Tests could not run: " + results.error + "." : `${results.passed} passed, ${results.failed} failed, ${results.total} of ${run.total} tests run.`));
+    if (results.failed_tests.length) kids.push(h("ul", { class: "failed-list" }, results.failed_tests.map((t) => h("li", {}, caseLabel(t) + (results.failed_critical.includes(t) ? "  (critical)" : "")))));
+  } else {
+    kids.push(h("p", { class: "note" }, `${run.selected.length} of ${run.total} tests selected. ${reason}`));
+  }
+  if (run.allIds.length) kids.push(testList(results));
+  reveal($("p-tests"), ...kids);
+}
+
+const STATUS_WORD = { passed: "Passed", failed: "Failed", queued: "Selected", skipped: "Not selected" };
+
+function testList(results) {
+  const ran = new Map((results ? results.results : []).map((r) => [r.id, r]));
+  const picked = new Set(run.selected);
+  return h("details", { class: "alltests" }, h("summary", {}, `All ${run.allIds.length} tests`),
+    h("ul", {}, run.allIds.map((id) => {
+      const r = ran.get(id), s = r ? r.status : picked.has(id) ? "queued" : "skipped";
+      return h("li", { "data-s": s }, h("span", { class: "st" }, STATUS_WORD[s]), h("span", { class: "mono" }, caseLabel(id)),
+        r && r.critical ? h("span", { class: "tag" }, "critical") : null);
+    })));
+}
+
 const handlers = {
-  planner(u) {
-    $("plan").replaceChildren(...u.tasks.map((t) => h("li", {}, t)));
-  },
+  planner(u) { $("plan").replaceChildren(...u.tasks.map((t) => h("li", {}, t))); },
   change_analysis(u) {
     reveal($("p-changes"),
       ...u.changed_files.map((f) => h("div", { class: "filerow" }, h("span", { class: "mono" }, f), (u.changed_functions[f] || []).map((fn) => h("span", { class: "tag" }, fn)))),
-      h("p", { class: "note" }, u.lines_changed + " lines changed compared with the baseline."));
+      h("p", { class: "note" }, u.lines_changed + " lines changed compared with the previous version."));
   },
   impact_analysis(u) {
     reveal($("p-impact"),
@@ -318,12 +750,10 @@ const handlers = {
     const m = /of (\d+) tests/.exec((u.trace || [""])[0]);
     run.total = m ? +m[1] : u.selected_tests.length;
     run.selected = u.selected_tests;
-    drawTests(null, u.selection_reason);
+    run.allIds = u.all_test_ids || [];
+    drawMatrix(null, u.selection_reason);
   },
-  test_execution(u) {
-    run.tests = u.test_results;
-    drawTests(u.test_results, null);
-  },
+  test_execution(u) { drawMatrix(u.test_results, null); },
   risk_assessment(u) {
     reveal($("p-risk"),
       h("div", { class: "score", "data-l": u.risk_level }, h("b", {}, String(u.risk_score)), h("span", {}, u.risk_level + " risk")),
@@ -344,25 +774,8 @@ const handlers = {
   manual_review() { run.attempts.at(-1).escalated = true; renderLedger(); },
 };
 
-function drawTests(results, reason) {
-  const rows = results ? results.results : run.selected.map((id) => ({ id, status: "queued" }));
-  const cells = rows.map((r) => h("span", { class: "cell", "data-s": r.status, title: r.id + (r.status === "queued" ? " (selected)" : " " + r.status) }));
-  for (let i = rows.length; i < run.total; i++) cells.push(h("span", { class: "cell", "data-s": "skipped", title: "not selected" }));
-  const kids = [
-    h("div", { class: "legend" }, h("span", { class: "p" }, "Passed"), h("span", { class: "f" }, "Failed"), h("span", { class: "q" }, "Selected, not run yet"), h("span", { class: "n" }, "Not selected")),
-    h("div", { class: "matrix" }, cells),
-  ];
-  if (results) {
-    kids.push(h("p", { class: "note" }, results.error ? "Tests could not run: " + results.error : `${results.passed} passed, ${results.failed} failed, ${results.total} of ${run.total} tests run.`));
-    if (results.failed_tests.length) kids.push(h("ul", { class: "failed-list" }, results.failed_tests.map((t) => h("li", {}, t + (results.failed_critical.includes(t) ? "  (critical)" : "")))));
-  } else {
-    kids.push(h("p", { class: "note" }, `${run.selected.length} of ${run.total} tests selected. ${reason}`));
-  }
-  reveal($("p-tests"), ...kids);
-}
-
 function showFinal(r) {
-  const v = $("verdict"); v.dataset.v = r.decision;
+  $("verdict").dataset.v = r.decision;
   $("stamp").textContent = r.decision;
   const escalated = r.critic_result !== "PASS";
   $("vtitle").textContent = { DEPLOY: "Cleared to deploy", HOLD: "Hold for review", BLOCK: "Blocked from release" }[r.decision];
@@ -373,8 +786,9 @@ function showFinal(r) {
     + `Risk ${r.risk_score} (${r.risk_level}). ${r.test_results.passed} of ${r.test_results.total} tests passed.`;
 }
 
+let timer;
 function onEvent(ev) {
-  if (ev.node === "error") { log(ev, "Error: " + ev.state_update.error); return finish(true); }
+  if (ev.node === "error") { log(ev, "Error: " + ev.state_update.error, "err"); return finish(ev.state_update.error); }
   if (ev.node === "final") return showFinal(ev.final_report), finish();
   setAgent(ev.node, "done");
   (handlers[ev.node] || (() => {}))(ev.state_update);
@@ -384,21 +798,28 @@ function onEvent(ev) {
   if (ev.node === "replan") setAgent("planner", "running");
 }
 
-function finish(failed) {
+async function finish(error) {
   clearInterval(timer);
-  $("go").disabled = false; $("go").textContent = "Analyze again";
-  if (failed) { $("stamp").textContent = "Error"; $("vtitle").textContent = "The analysis did not finish"; $("vtext").textContent = "Open the live trace for the error message, then try again."; }
+  running = null;
+  $("go").textContent = "Analyze again";
+  if (error) {
+    $("stamp").textContent = "Error"; $("vtitle").textContent = "The analysis did not finish";
+    $("vtext").textContent = error; $("vfacts").textContent = "The live trace below has the details.";
+  }
+  const keep = document.querySelector("input[name=rel]:checked")?.value;
+  try { applyProject(await fetchProject(view.id), keep); } catch { drawVersions(keep); }
 }
 
-async function analyze(id) {
+async function analyze(version) {
   resetStage();
+  running = new AbortController();
   $("go").disabled = true; $("go").textContent = "Analyzing";
   const t0 = performance.now();
   timer = setInterval(() => { $("elapsed").textContent = ((performance.now() - t0) / 1000).toFixed(1) + " s"; }, 100);
   setAgent("planner", "running");
   try {
-    const res = await fetch("/analyze/" + encodeURIComponent(id), { method: "POST" });
-    if (!res.ok) throw new Error((await res.json()).detail || res.statusText);
+    const res = await fetch(`/projects/${view.id}/versions/${encodeURIComponent(version)}/analyze`, { method: "POST", signal: running.signal, headers: { "X-DeploySure": "1" } });
+    if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || res.statusText);
     const reader = res.body.getReader(), dec = new TextDecoder();
     let buf = "";
     for (;;) {
@@ -412,18 +833,133 @@ async function analyze(id) {
       }
     }
   } catch (err) {
-    log({ timestamp: "" }, "Error: " + err.message);
-    $("log").lastChild.className = "err"; finish(true);
+    if (err.name === "AbortError") return;  // the user left the page
+    log({ timestamp: "" }, "Error: " + err.message, "err");
+    finish(err.message);
   }
 }
 
 $("form").addEventListener("submit", (e) => {
   e.preventDefault();
   const picked = document.querySelector("input[name=rel]:checked");
-  if (picked) analyze(picked.value);
+  if (picked && !running) analyze(picked.value);
 });
 
-run = freshRun(); renderAgents(); loadReleases();
+/* ---------------- dialogs ---------------- */
+function openDialog(id) { $(id).showModal(); $(id).querySelector("input:not([type=checkbox]), textarea")?.focus(); }
+
+function wireDialog(id, submit) {
+  const dlg = $(id), form = dlg.querySelector("form"), err = dlg.querySelector(".form-error");
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    err.textContent = "";
+    const button = form.querySelector("button[type=submit]");
+    button.disabled = true;
+    try { await submit(Object.fromEntries(new FormData(form))); dlg.close(); form.reset(); }
+    catch (ex) { err.textContent = ex.message; }
+    finally { button.disabled = false; }
+  });
+  dlg.querySelector("[data-cancel]").addEventListener("click", () => { dlg.close(); err.textContent = ""; });
+}
+
+wireDialog("dlg-project", async (d) => {
+  const card = await post("/projects", { name: d.name, folder_path: d.folder_path, version: d.version || "v1.0",
+    critical_modules: d.critical_modules.split(",").map((m) => m.trim()).filter(Boolean) });
+  location.hash = "#/p/" + card.id;
+});
+
+wireDialog("dlg-version", async (d) => {
+  await post(`/projects/${view.id}/versions`, { version: d.version, folder_path: d.folder_path, notes: d.notes });
+  applyProject(await fetchProject(view.id), d.version);
+});
+
+let editingId = null;  // null means the dialog adds a new test case
+
+wireDialog("dlg-test", async (d) => {
+  const body = { title: d.title, source: d.source, critical: d.critical === "on" };
+  if (editingId) await api(`/projects/${view.id}/tests/${editingId}`, { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  else await post(`/projects/${view.id}/tests`, body);
+  view.tests = await api(`/projects/${view.id}/tests`);
+  drawCases();
+  reloadAllTests();
+});
+
+function openTestDialog(c) {
+  const dlg = $("dlg-test"), f = dlg.querySelector("form");
+  f.reset();
+  editingId = c ? c.id : null;
+  $("t-test").textContent = c ? "Edit test case" : "Add test case";
+  f.querySelector("button[type=submit]").textContent = c ? "Save changes" : "Add test case";
+  if (c) {
+    f.querySelector("[name=title]").value = c.title;
+    f.querySelector("[name=source]").value = c.source;
+    f.querySelector("[name=critical]").checked = c.critical;
+  } else {
+    const module = view.project.modules[0] || "your_module";  // a starting point that matches this project
+    f.querySelector("[name=source]").value = `import ${module}\n\n\ndef test_my_check():\n    assert ${module}.some_function(1, 2) == 3\n`;
+  }
+  dlg.querySelector(".form-error").textContent = "";
+  openDialog("dlg-test");
+}
+const openEdit = (c) => openTestDialog(c);
+
+/* view or edit one of the project's own test files (newest version) */
+let editingFile = null;
+
+async function openTestFile(file) {
+  const dlg = $("dlg-file"), f = dlg.querySelector("form");
+  f.reset();
+  dlg.querySelector(".form-error").textContent = "";
+  try {
+    const got = await api(`/projects/${view.id}/test-files/${encodeURIComponent(file)}`);
+    editingFile = file;
+    $("t-file").textContent = file;
+    $("file-lead").textContent = got.editable ? `Changes apply to ${got.version} only. Older versions keep their own copy.`
+      : "This file is locked, so the demo scenario stays the same. You can read it but not save changes.";
+    f.source.value = got.source;
+    f.source.readOnly = !got.editable;
+    $("file-save").hidden = !got.editable;
+    openDialog("dlg-file");
+  } catch (err) { $("alltests-note").hidden = false; $("alltests-note").textContent = err.message; }
+}
+
+wireDialog("dlg-file", async (d) => {
+  await api(`/projects/${view.id}/test-files/${encodeURIComponent(editingFile)}`,
+    { method: "PUT", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ source: d.source }) });
+  applyProject(await fetchProject(view.id));  // refreshes the "tests changed since" labels and the list
+});
+
+function openProject() {
+  const dlg = $("dlg-project");
+  dlg.querySelector("form").reset();  // a cancelled dialog must not keep old values
+  dlg.querySelector(".form-error").textContent = "";
+  openDialog("dlg-project");
+}
+$("open-project").addEventListener("click", openProject);
+$("open-version").addEventListener("click", () => {
+  $("dlg-version").querySelector("form").reset();
+  $("dlg-version").querySelector(".form-error").textContent = "";
+  const last = view.project.versions.at(-1)?.version || "";
+  const m = /^(.*?)(\d+)$/.exec(last);  // suggest the next number, for example v2.0 then v2.1
+  $("dlg-version").querySelector("[name=version]").value = m ? m[1] + (+m[2] + 1) : "";
+  openDialog("dlg-version");
+});
+$("open-test").addEventListener("click", () => openTestDialog(null));
+$("search").addEventListener("input", drawCards);
+
+/* ---------------- router ---------------- */
+function route() {
+  if (running) running.abort();
+  clearInterval(timer);
+  running = null;
+  stopApp();  // leaving an app page stops its polling and any analysis stream
+  const a = /^#\/a\/([a-z0-9-]+)$/.exec(location.hash);
+  const m = /^#\/p\/([a-z0-9-]+)$/.exec(location.hash);
+  if (a) showApp(a[1]); else if (m) showProject(m[1]); else showHome();
+}
+addEventListener("hashchange", route);
+initAppMode();
+route();
 </script>
 </body>
 </html>

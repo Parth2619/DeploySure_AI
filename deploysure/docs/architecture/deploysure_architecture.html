@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DeploySure AI: System Architecture</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #fff; font-family: "Segoe UI", Arial, sans-serif; color: #1E1B4B; }
+  #board { position: relative; width: 1600px; height: 800px; background:
+    linear-gradient(#EEF0F7 1px, transparent 1px) 0 0 / 40px 40px, linear-gradient(90deg, #EEF0F7 1px, transparent 1px) 0 0 / 40px 40px, #FAFAFE; overflow: hidden; }
+  h1 { position: absolute; left: 24px; top: 14px; font-size: 52px; font-weight: 800; color: #2B2A6B; letter-spacing: -1px; }
+  .sub { position: absolute; left: 26px; top: 80px; font-size: 22px; color: #6B6A94; }
+  .panel { position: absolute; background: #F1EFFC; border: 2px solid #CFC9F4; border-radius: 22px; }
+  .panel > .ptitle { display: flex; align-items: center; gap: 12px; padding: 16px 20px 6px; font-size: 25px; font-weight: 800; color: #2B2A6B; }
+  .dot { width: 30px; height: 30px; border-radius: 9px; background: #5B4FD6; color: #fff; display: grid; place-items: center; font-size: 16px; font-weight: 800; }
+  .card { position: absolute; background: #fff; border: 2px solid #DAD6F3; border-radius: 16px; padding: 12px; box-shadow: 0 2px 0 #E4E0F8; }
+  .card b { display: block; font-size: 19px; color: #26245F; font-weight: 800; line-height: 1.15; }
+  .card span.d { display: block; margin-top: 4px; font-size: 14px; color: #6B6A94; line-height: 1.25; }
+  .tag { position: absolute; top: -12px; right: 12px; font-size: 11px; font-weight: 800; padding: 3px 9px; border-radius: 10px; letter-spacing: .3px; border: 2px solid #fff; }
+  .ai { background: #5B4FD6; color: #fff; } .code { background: #E6E5EE; color: #44435F; } .mix { background: #FFD9B3; color: #7A3E00; }
+  .pill { position: absolute; height: 34px; border-radius: 17px; background: #DAD6F8; color: #2B2A6B; font-weight: 800; font-size: 18px; display: grid; place-items: center; }
+  .pill.o { background: #FFE2C8; }
+  .badge { width: 40px; height: 40px; border-radius: 12px; background: #EAE7FB; color: #5B4FD6; display: grid; place-items: center; font-size: 20px; font-weight: 800; margin: 0 auto 8px; }
+  .agent { text-align: center; }
+  .small { display: flex; align-items: center; justify-content: center; }
+  .state { position: absolute; background: #FFF6EC; border: 2px dashed #F2B880; border-radius: 14px; padding: 10px 16px; font-size: 15px; color: #6B3E12; text-align: center; line-height: 1.35; }
+  .state b { color: #8A4B00; }
+  .dec { display: flex; align-items: center; gap: 14px; }
+  .dec i { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-style: normal; font-weight: 800; font-size: 22px; color: #fff; flex: none; }
+  .loop { position: absolute; background: #DAD6F8; color: #2B2A6B; font-weight: 800; font-size: 16px; padding: 6px 18px; border-radius: 18px; border: 2px solid #B9B2F0; white-space: nowrap; }
+  .legend { position: absolute; font-size: 14px; color: #6B6A94; display: flex; gap: 12px; align-items: center; }
+  .legend .tag { position: static; border: 0; }
+  svg.lines { position: absolute; left: 0; top: 0; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="board">
+  <h1>DeploySure AI: System Architecture</h1>
+  <div class="sub">Multi-agent risk check for a whole web app: frontend, backend and the connection between them</div>
+
+  <div class="panel" style="left:20px; top:128px; width:260px; height:402px;">
+    <div class="ptitle"><span class="dot">&#9654;</span>App input</div>
+    <div class="card" style="left:16px; top:70px; width:228px; height:90px;"><b>Git repo</b><span class="d">GitHub link or local folder</span></div>
+    <div class="card" style="left:16px; top:174px; width:228px; height:90px;"><b>Two commits</b><span class="d">old and new, found by Watch every few seconds</span></div>
+    <div class="card" style="left:16px; top:278px; width:228px; height:100px;"><b>App code</b><span class="d">frontend, backend, tests, config and packages</span></div>
+  </div>
+
+  <div class="panel" style="left:324px; top:128px; width:800px; height:402px;">
+    <div class="ptitle"><span class="dot">&#10022;</span>LangGraph orchestrator
+      <span style="margin-left:auto; font-size:15px; font-weight:600; color:#6B6A94;">runs the agents in order, shares one state</span></div>
+
+    <div class="pill" style="left:14px; top:62px; width:140px;">Scan</div>
+    <div class="pill o" style="left:172px; top:62px; width:140px;">Plan</div>
+    <div class="pill" style="left:330px; top:62px; width:140px;">Test</div>
+    <div class="pill o" style="left:488px; top:62px; width:140px;">Assess</div>
+    <div class="pill" style="left:646px; top:62px; width:140px;">Decide</div>
+
+    <div class="card agent" style="left:14px; top:112px; width:140px; height:160px;"><span class="tag code">Code</span><div class="badge">S</div><b>Scanner</b><span class="d">Reads the diff and maps the app</span></div>
+    <div class="card agent" style="left:172px; top:112px; width:140px; height:160px;"><span class="tag ai">AI</span><div class="badge">P</div><b>Planner</b><span class="d">Chooses what to test first</span></div>
+    <div class="card agent small" style="left:330px; top:112px; width:140px; height:74px;"><span class="tag mix">AI + code</span><b>Test writer</b></div>
+    <div class="card agent small" style="left:330px; top:198px; width:140px; height:74px;"><span class="tag code">Code</span><b>Test runner</b></div>
+    <div class="card agent small" style="left:488px; top:112px; width:140px; height:74px;"><span class="tag code">Code</span><b>Fault finder</b></div>
+    <div class="card agent small" style="left:488px; top:198px; width:140px; height:74px;"><span class="tag code">Code</span><b>Risk scorer</b></div>
+    <div class="card agent" style="left:646px; top:112px; width:140px; height:160px;"><span class="tag ai">AI</span><div class="badge">D</div><b>Decider</b><span class="d">Recommends DEPLOY, HOLD or BLOCK</span></div>
+
+    <div class="state" style="left:14px; top:292px; width:616px; height:92px;"><b>Shared state</b> (every agent reads and writes it)<br>scan &middot; focus &middot; checks &middot; reports &middot; layer verdict &middot; risk &middot; decision<br><b>+ messages</b> agents send each other: focus, repair request, findings, challenge</div>
+  </div>
+
+  <div class="card agent" style="left:1160px; top:240px; width:180px; height:160px;"><span class="tag mix">Rules + AI</span><div class="badge">C</div><b>Critic</b><span class="d">Checks the decision against fixed rules, can say FAIL</span></div>
+
+  <div class="panel" style="left:1370px; top:128px; width:210px; height:402px;">
+    <div class="ptitle"><span class="dot" style="background:#F08A2B">&#9873;</span>Verdict</div>
+    <div class="card dec" style="left:14px; top:66px; width:182px; height:62px;"><i style="background:#2E9E64">&#10003;</i><div><b style="font-size:18px">DEPLOY</b><span class="d" style="margin:0;font-size:13px">safe to ship</span></div></div>
+    <div class="card dec" style="left:14px; top:138px; width:182px; height:62px;"><i style="background:#E0A21B">II</i><div><b style="font-size:18px">HOLD</b><span class="d" style="margin:0;font-size:13px">needs review</span></div></div>
+    <div class="card dec" style="left:14px; top:210px; width:182px; height:62px;"><i style="background:#D64545">&#10005;</i><div><b style="font-size:18px">BLOCK</b><span class="d" style="margin:0;font-size:13px">do not ship</span></div></div>
+    <div class="card" style="left:14px; top:286px; width:182px; height:100px;"><b style="font-size:16px">Layer at fault</b><span class="d">Frontend, Backend, Connection or Environment</span></div>
+  </div>
+
+  <div class="loop" style="left:1062px; top:546px;">Retry (max 2)</div>
+  <div class="loop" style="left:478px; top:546px; background:#FFE2C8; border-color:#F2B880;">Unreliable checks go back to the Test writer, once</div>
+
+  <div class="panel" style="left:20px; top:612px; width:1560px; height:160px; background:#FBFAFF;">
+    <div class="ptitle" style="padding-bottom:0;"><span class="dot" style="background:#2E9E64">&#9881;</span>Tools and data
+      <span style="margin-left:14px; font-size:15px; font-weight:500; color:#6B6A94;">used by the agents to read, run and decide</span></div>
+    <div class="card" style="left:16px; top:62px; width:290px; height:82px;"><b>Git and diff</b><span class="d">Reads commits, fetches GitHub, read-only</span></div>
+    <div class="card" style="left:322px; top:62px; width:290px; height:82px;"><b>App runner</b><span class="d">Starts the old and new app in a sandbox</span></div>
+    <div class="card" style="left:628px; top:62px; width:290px; height:82px;"><b>Browser</b><span class="d">Real Chromium click-throughs on both</span></div>
+    <div class="card" style="left:934px; top:62px; width:290px; height:82px;"><b>Rule engine</b><span class="d">Layer verdict, risk score, Critic floor</span></div>
+    <div class="card" style="left:1240px; top:62px; width:304px; height:82px;"><b>Groq AI</b><span class="d">Plan, checks and wording. Never below the rules</span></div>
+  </div>
+
+  <div class="legend" style="left:30px; top:778px;"><span class="tag ai">AI</span> uses the model <span class="tag code">Code</span> plain code <span class="tag mix">AI + code</span> both</div>
+
+  <svg class="lines" width="1600" height="800" viewBox="0 0 1600 800">
+    <defs>
+      <marker id="a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#5B4FD6"/></marker>
+      <marker id="o" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M1 1L9 5L1 9z" fill="#F08A2B"/></marker>
+    </defs>
+    <g stroke="#5B4FD6" stroke-width="3" fill="none">
+      <line x1="284" y1="330" x2="318" y2="330" marker-end="url(#a)"/>
+      <line x1="1124" y1="320" x2="1158" y2="320" marker-end="url(#a)"/>
+      <line x1="1342" y1="320" x2="1368" y2="320" marker-end="url(#a)"/>
+      <path d="M1250 402 L1250 563 L1210 563"/>
+      <path d="M1060 563 L1040 563 L1040 406" marker-end="url(#a)"/>
+    </g>
+    <g stroke="#F08A2B" stroke-width="3" fill="none">
+      <path d="M798 365 L808 365 L808 279 L798 279" marker-end="url(#o)"/>
+    </g>
+    <g stroke="#9C98C8" stroke-width="2" stroke-dasharray="3 6" fill="none">
+      <line x1="400" y1="530" x2="400" y2="612"/><line x1="940" y1="530" x2="940" y2="612"/><line x1="1475" y1="530" x2="1475" y2="612"/>
+    </g>
+  </svg>
+</div>
+</body>
+</html>

@@ -39,7 +39,7 @@ def minimum_decision(level: str, failed_critical: int, failed_noncritical: int,
     if failed_noncritical:
         fired.append(f"{failed_noncritical} non-critical test(s) failed: HOLD at minimum")
     if test_error:
-        fired.append("tests could not run: HOLD at minimum")
+        fired.append("tests missing or could not run: HOLD at minimum")
     if fired:
         return "HOLD", fired
     return "DEPLOY", ["all selected tests passed and risk is LOW: DEPLOY allowed"]
@@ -50,13 +50,14 @@ def decision_allowed(decision: str, minimum: str) -> bool:
 
 
 def calculate_risk(changed_modules: list[str], dependents: int, lines_changed: int,
-                   failed_critical: int, failed_noncritical: int) -> dict:
+                   failed_critical: int, failed_noncritical: int,
+                   critical_modules=CRITICAL_MODULES, customer_facing=CUSTOMER_FACING) -> dict:
     """dependents = source modules (not tests) that import a changed module."""
     components = {
         "change_impact": min(25, 4 * dependents + lines_changed // 10),
-        "critical_component": 30 if CRITICAL_MODULES & set(changed_modules) else 0,
+        "critical_component": 30 if set(critical_modules) & set(changed_modules) else 0,
         "failed_test_severity": min(30, 15 * failed_critical + 5 * failed_noncritical),
-        "customer_facing": max((CUSTOMER_FACING.get(m, 0) for m in changed_modules), default=0),
+        "customer_facing": max((customer_facing.get(m, 0) for m in changed_modules), default=0),
         "failure_count": min(5, 3 * (failed_critical + failed_noncritical)),
     }
     score = max(0, min(100, sum(components.values())))

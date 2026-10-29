@@ -12,7 +12,7 @@ def build_import_graph(release_dir: Path) -> dict[str, set[str]]:
     graph: dict[str, set[str]] = {}
     for path in python_files(release_dir):
         deps: set[str] = set()
-        for node in ast.walk(ast.parse(read_source(path))):
+        for node in ast.walk(ast.parse(read_source(path), filename=path.name)):
             if isinstance(node, ast.Import):
                 deps.update(a.name.split(".")[0] for a in node.names)
             elif isinstance(node, ast.ImportFrom):

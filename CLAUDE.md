@@ -7,7 +7,7 @@ Owner: Manc (Mansi Pradip Koshti). Demo is a 5 minute live slot on 19 to 22 Oct 
 ## Hard requirements (from the course brief)
 
 - Must be an agentic workflow: planning, execution, decision-making, validation, agent collaboration. A chatbot is not enough.
-- Python. LangGraph for orchestration. Free local model via Ollama, or a mock model. No paid APIs.
+- Python. LangGraph for orchestration. AI through the Groq API, free tier only (Manc's decision on 20 Oct 2026, replacing Ollama and the mock). No paid APIs.
 - Dummy or synthetic data only. Never connect to a real production system.
 - The UI is built separately by Manc. This repo ships the backend only, plus one clean entrypoint (see Interface).
 - Owner must be able to explain every file in a viva. Prefer simple, readable code over clever code.
@@ -88,7 +88,7 @@ deploysure/
                  test_executor.py risk_assessor.py decision_agent.py critic.py
   orchestration/ state.py graph.py routing.py
   tools/         code_reader.py diff_tool.py dependency_analyzer.py test_runner.py risk_formula.py
-  models/        llm.py          (Ollama client + MockLLM, chosen by env var)
+  models/        llm.py          (Groq client, key from GROQ_API_KEY)
   demo_project/  v2.0/ v2.1/ v2.2/   (each a tiny shop: auth, payment, orders, notification, checkout, refund + tests)
   releases/      release_v2_1.json release_v2_2.json   (metadata and release notes)
   tests/         unit tests for tools, routing, risk formula, and both end-to-end scenarios
@@ -104,19 +104,19 @@ python -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
 pytest tests/ -q                       # project tests (not the demo project's tests)
 python -m deploysure.cli v2.1          # run a release from the terminal (add if missing)
-DEPLOYSURE_LLM=mock python -m deploysure.cli v2.2   # no Ollama needed
-ollama pull qwen2.5:7b                 # real model, optional
+GROQ_API_KEY=... python -m deploysure.cli v2.2      # key comes from the environment, never the repo
 ```
 
 Run the demo project's own tests only through `tools/test_runner.py`, which calls pytest on a given release folder with a timeout.
 
 ## LLM handling
 
-- `models/llm.py` exposes one function, `ask(prompt, schema=None)`. Backend is chosen by `DEPLOYSURE_LLM` = `ollama` or `mock`.
+- `models/llm.py` exposes one function, `ask(prompt, schema=None)`. The only backend is Groq (`GROQ_API_KEY`, model from `GROQ_MODEL`, default `openai/gpt-oss-120b`).
 - Ask for JSON and validate it. On invalid output, retry once, then fall back to a deterministic default and record the fallback in the trace.
-- Temperature 0. Fixed seed where the backend supports it.
-- `MockLLM` returns canned, schema-valid answers per node so every test and the backup demo run offline.
-- Default model: `qwen2.5:7b` or `llama3.2:3b` if the laptop is slow. Check speed on Manc's actual machine before choosing.
+- The key is read from the `GROQ_API_KEY` environment variable, else from `deploysure/.env` (git-ignored, written by Manc herself, never by Claude or in chat).
+- Temperature 0 and a fixed seed.
+- The test suite never calls Groq. It uses a stub in `tests/fake_llm.py` that is not part of the product.
+- Free tier limits are small (about 8,000 tokens per minute on the 120B model), so keep prompts short. With no key or no internet every AI step uses its deterministic default and the trace says so.
 
 ## Conventions
 
@@ -124,7 +124,7 @@ Run the demo project's own tests only through `tools/test_runner.py`, which call
 - Nodes are plain functions `(state) -> partial state dict`. No classes unless needed.
 - Every node appends a human readable line to `state["trace"]`. The UI and the viva both rely on this.
 - Paths use `pathlib`. Subprocess calls always have a timeout.
-- Keep dependencies minimal: `langgraph`, `langchain-ollama` or `ollama`, `pytest`. Add `fastapi` and `uvicorn` only for `server.py`.
+- Keep dependencies minimal: `langgraph`, `httpx`, `pytest`. Add `fastapi` and `uvicorn` only for `server.py`.
 - Comments explain why, not what. Short.
 - No em dashes in any document or slide text. Use commas, colons or full stops.
 
@@ -132,7 +132,7 @@ Run the demo project's own tests only through `tools/test_runner.py`, which call
 
 - Tools (diff, dependency, risk formula, test runner parsing) get unit tests.
 - `routing.route_after_critic` gets tests for PASS, FAIL under the cap, and FAIL at the cap.
-- Two end-to-end tests, one per scenario, run with `DEPLOYSURE_LLM=mock` and assert the final decision, the Critic result, and `retry_count`.
+- Two end-to-end tests, one per scenario, run with the test AI stub and assert the final decision, the Critic result, and `retry_count`.
 - Before claiming anything works, run the tests and show the output. Do not say "done" from reading code.
 
 ## Boundaries

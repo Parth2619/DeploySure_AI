@@ -1,0 +1,4 @@
+stage_repo/
+__pycache__/
+.pytest_cache/
+.venv/

@@ -5,7 +5,8 @@ from deploysure.tools.diff_tool import diff_releases
 
 
 def change_analysis(state: ReleaseState) -> dict:
-    diff = diff_releases(release_path(state["baseline"]), release_path(state["release_id"]))
+    project = state["project_id"]
+    diff = diff_releases(release_path(state["baseline"], project), release_path(state["release_id"], project))
     functions = {f: d["functions"] for f, d in diff["details"].items()}
     summary = "; ".join(f"{f} ({', '.join(fn)})" for f, fn in functions.items()) or "no changes"
     return {

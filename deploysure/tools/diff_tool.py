@@ -8,6 +8,10 @@ from pathlib import Path
 from .code_reader import python_files, read_source, release_path
 
 
+def _is_code(path: Path) -> bool:
+    return not (path.name.startswith("test_") or path.name == "conftest.py")
+
+
 def _strip_docstring(node: ast.AST) -> ast.AST:
     node = copy.deepcopy(node)
     body = node.body
@@ -17,7 +21,7 @@ def _strip_docstring(node: ast.AST) -> ast.AST:
     return node
 
 
-def _function_map(source: str) -> dict[str, str]:
+def _function_map(source: str, filename: str = "<unknown>") -> dict[str, str]:
     """Maps 'func' or 'Class.method' to a dump of its code, ignoring comments and docstrings."""
     found: dict[str, str] = {}
 
@@ -28,22 +32,22 @@ def _function_map(source: str) -> dict[str, str]:
             elif isinstance(child, ast.ClassDef):
                 visit(child, prefix + child.name + ".")
 
-    visit(ast.parse(source), "")
+    visit(ast.parse(source, filename=filename), "")
     return found
 
 
-def _module_level_dump(source: str) -> str:
+def _module_level_dump(source: str, filename: str = "<unknown>") -> str:
     """Imports and constants outside functions, so editing FEE_RATE is not missed."""
-    keep = [n for n in ast.parse(source).body
+    keep = [n for n in ast.parse(source, filename=filename).body
             if not isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef))
             and not (isinstance(n, ast.Expr) and isinstance(n.value, ast.Constant))]
     return "\n".join(ast.dump(n) for n in keep)
 
 
-def changed_functions(old_src: str, new_src: str) -> list[str]:
-    old, new = _function_map(old_src), _function_map(new_src)
+def changed_functions(old_src: str, new_src: str, filename: str = "<unknown>") -> list[str]:
+    old, new = _function_map(old_src, filename), _function_map(new_src, filename)
     names = {n for n in old.keys() | new.keys() if old.get(n) != new.get(n)}
-    if _module_level_dump(old_src) != _module_level_dump(new_src):
+    if _module_level_dump(old_src, filename) != _module_level_dump(new_src, filename):
         names.add("<module-level>")
     return sorted(names)
 
@@ -55,8 +59,9 @@ def lines_changed(old_src: str, new_src: str) -> int:
 
 def diff_releases(old_dir: Path, new_dir: Path) -> dict:
     """Returns changed files with their changed functions and line counts."""
-    old_files = {p.name: p for p in python_files(old_dir)}
-    new_files = {p.name: p for p in python_files(new_dir)}
+    # Tests are not product code, and generated test cases must never count as a change.
+    old_files = {p.name: p for p in python_files(old_dir) if _is_code(p)}
+    new_files = {p.name: p for p in python_files(new_dir) if _is_code(p)}
     details: dict[str, dict] = {}
     for name in sorted(old_files.keys() | new_files.keys()):
         old_src = read_source(old_files[name]) if name in old_files else ""
@@ -64,7 +69,7 @@ def diff_releases(old_dir: Path, new_dir: Path) -> dict:
         if old_src == new_src:
             continue
         details[name] = {
-            "functions": changed_functions(old_src, new_src),
+            "functions": changed_functions(old_src, new_src, name),
             "lines_changed": lines_changed(old_src, new_src),
         }
     return {
